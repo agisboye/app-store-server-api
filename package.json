@@ -1,0 +1,63 @@
+{
+  "name": "app-store-server-api",
+  "version": "0.1.0",
+  "description": "A client for the App Store Server API",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.js",
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "package": "npm run build && npm pack"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "app",
+    "store",
+    "server",
+    "api",
+    "apple",
+    "in-app",
+    "purchase",
+    "subscription",
+    "receipt",
+    "validation"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/agisboye/app-store-server-api",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:agisboye/app-store-server-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/agisboye/app-store-server-api/issues"
+  },
+  "dependencies": {
+    "jose": "^4.3.7",
+    "node-fetch": "^2.6.6",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "@types/node-fetch": "^2.5",
+    "@types/uuid": "^8.3.3",
+    "prettier": "^2.4.0",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "arrowParens": "avoid",
+    "printWidth": 120
+  }
+}
