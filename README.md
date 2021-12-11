@@ -1,5 +1,5 @@
 # app-store-server-api
-A client for the [App Store Server API](https://developer.apple.com/documentation/appstoreserverapi).
+A Node.js client for the [App Store Server API](https://developer.apple.com/documentation/appstoreserverapi).
 
 ## Features
 - History, subscription status and order lookup endpoints
@@ -7,7 +7,10 @@ A client for the [App Store Server API](https://developer.apple.com/documentatio
 - Manages authentication tokens for you
 - Helpers to decode JWS items
 - Performs certificate validation against Apple's CA.
+- Types and helpers for [App Store Server Notifications V2](https://developer.apple.com/documentation/appstoreservernotifications)
 
+## Requirements
+Node.js 15.6.0 or newer
 
 ## Installation
 ```bash
@@ -80,13 +83,28 @@ const renewalInfo = await api.decodeRenewalInfo(item.signedRenewalInfo)
 ### Order lookup
 ```javascript
 // Import the status type
-const { OrderLookupStatus } = require("app-store-server-api")
+import { OrderLookupStatus } from "app-store-server-api"
 
 const response = await api.lookupOrder(orderId)
 
 if (response.orderLookupStatus === OrderLookupStatus.Valid) {
     const transactions = await api.decodeTransactions(response.signedTransactions)
     /// ...
+}
+```
+
+### Server notifications
+While not exactly part of the App Store Server API, App Store Server Notifications (version 2) is closely related and uses some of the same types and encoding format as the API. For that reason this package includes a function to help you decode notifications (which will also verify their signature).
+
+```javascript
+import { decodeNotificationPayload } from "app-store-server-api"
+
+// signedPayload is the body sent by Apple
+const payload = await decodeNotificationPayload(signedPayload)
+
+// You might want to check that the bundle ID matches that of your app
+if (payload.data.bundleId === APP_BUNDLE_ID) {
+  // Handle the notification...
 }
 ```
 
