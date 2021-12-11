@@ -10,4 +10,6 @@ export {
   OrderLookupStatus
 } from "./Models"
 
+export { decodeNotificationPayload } from "./AppStoreServerNotifications"
+
 export { AppStoreError, CertificateValidationError } from "./Errors"
