@@ -147,3 +147,56 @@ export enum OrderLookupStatus {
   Valid = 0,
   Invalid = 1
 }
+
+// https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
+export interface DecodedNotificationPayload {
+  notificationType: NotificationType
+  subtype: NotificationSubtype
+  notificationUUID: string
+  notificationVersion: number
+  data: NotificationData
+}
+
+// https://developer.apple.com/documentation/appstoreservernotifications/data
+export interface NotificationData {
+  appAppleId: string
+  bundleId: string
+  bundleVersion: number
+  environment: Environment
+  signedRenewalInfo: JWSRenewalInfo
+  signedTransactionInfo: JWSTransaction
+}
+
+// https://developer.apple.com/documentation/appstoreservernotifications/notificationtype
+export enum NotificationType {
+  ConsumptionRequest = "CONSUMPTION_REQUEST",
+  DidChangeRenewalPref = "DID_CHANGE_RENEWAL_PREF",
+  DidChangeRenewalStatus = "DID_CHANGE_RENEWAL_STATUS",
+  DidFailToRenew = "DID_FAIL_TO_RENEW",
+  DidRenew = "DID_RENEW",
+  Expired = "EXPIRED",
+  GracePeriodExpired = "GRACE_PERIOD_EXPIRED",
+  OfferRedeemed = "OFFER_REDEEMED",
+  PriceIncrease = "PRICE_INCREASE",
+  Refund = "REFUND",
+  RefundDeclined = "REFUND_DECLINED",
+  Revoke = "REVOKE",
+  Subscribed = "SUBSCRIBED"
+}
+
+// https://developer.apple.com/documentation/appstoreservernotifications/subtype
+export enum NotificationSubtype {
+  InitialBuy = "INITIAL_BUY",
+  Resubscribe = "RESUBSCRIBE",
+  Downgrade = "DOWNGRADE",
+  Upgrade = "UPGRADE",
+  AutoRenewEnabled = "AUTO_RENEW_ENABLED",
+  AutoRenewDisabled = "AUTO_RENEW_DISABLED",
+  Voluntary = "VOLUNTARY",
+  BillingRetry = "BILLING_RETRY",
+  PriceIncrease = "PRICE_INCREASE",
+  GracePeriod = "GRACE_PERIOD",
+  BillingRecovery = "BILLING_RECOVERY",
+  Pending = "PENDING",
+  Accepted = "ACCEPTED"
+}
