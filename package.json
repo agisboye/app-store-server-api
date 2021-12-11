@@ -26,9 +26,11 @@
     "apple",
     "in-app",
     "purchase",
+    "iap",
     "subscription",
     "receipt",
-    "validation"
+    "validation",
+    "notifications"
   ],
   "license": "MIT",
   "homepage": "https://github.com/agisboye/app-store-server-api",
