@@ -2,12 +2,37 @@ import { X509Certificate } from "crypto"
 import * as jose from "jose"
 import { APPLE_ROOT_CA_G3_FINGERPRINT } from "./AppleRootCertificate"
 import { CertificateValidationError } from "./Errors"
+import {
+  DecodedNotificationPayload,
+  JWSRenewalInfo,
+  JWSRenewalInfoDecodedPayload,
+  JWSTransaction,
+  JWSTransactionDecodedPayload
+} from "./Models"
+
+export async function decodeTransactions(
+  signedTransactions: JWSTransaction[]
+): Promise<JWSTransactionDecodedPayload[]> {
+  return Promise.all(signedTransactions.map(decodeJWS))
+}
+
+export async function decodeTransaction(transaction: JWSTransaction): Promise<JWSTransactionDecodedPayload> {
+  return decodeJWS(transaction)
+}
+
+export async function decodeRenewalInfo(info: JWSRenewalInfo): Promise<JWSRenewalInfoDecodedPayload> {
+  return decodeJWS(info)
+}
+
+export async function decodeNotificationPayload(payload: string): Promise<DecodedNotificationPayload> {
+  return decodeJWS(payload)
+}
 
 /**
  * Decodes and verifies an object signed by the App Store according to JWS.
  * See: https://developer.apple.com/documentation/appstoreserverapi/jwstransaction
  */
-export async function decodeJWS(token: string): Promise<any> {
+async function decodeJWS(token: string): Promise<any> {
   // Extracts the key used to sign the JWS from the header of the token
   const getKey: jose.CompactVerifyGetKey = async (protectedHeader, _token) => {
     // RC 7515 stipulates that the key used to sign the JWS must be the first in the chain.

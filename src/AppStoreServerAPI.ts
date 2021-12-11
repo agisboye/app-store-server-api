@@ -1,22 +1,10 @@
 import fetch from "node-fetch"
 import { v4 as uuidv4 } from "uuid"
 import * as jose from "jose"
-import {
-  Environment,
-  HistoryResponse,
-  JWSRenewalInfo,
-  JWSRenewalInfoDecodedPayload,
-  JWSTransaction,
-  JWSTransactionDecodedPayload,
-  OrderLookupResponse,
-  StatusResponse
-} from "./Models"
-
+import { Environment, HistoryResponse, OrderLookupResponse, StatusResponse } from "./Models"
 import { AppStoreError } from "./Errors"
-import { decodeJWS } from "./Decoding"
 
 export class AppStoreServerAPI {
-  
   // The maximum age that an authentication token is allowed to have, as decided by Apple.
   static readonly maxTokenAge: number = 3600 // seconds, = 1 hour
 
@@ -72,20 +60,6 @@ export class AppStoreServerAPI {
    */
   async lookupOrder(orderId: string): Promise<OrderLookupResponse> {
     return this.makeRequest(`${this.baseUrl}/inApps/v1/lookup/${orderId}`)
-  }
-
-  // Decoding helpers
-
-  async decodeTransactions(signedTransactions: JWSTransaction[]): Promise<JWSTransactionDecodedPayload[]> {
-    return Promise.all(signedTransactions.map(decodeJWS))
-  }
-
-  async decodeTransaction(transaction: JWSTransaction): Promise<JWSTransactionDecodedPayload> {
-    return decodeJWS(transaction)
-  }
-
-  async decodeRenewalInfo(info: JWSRenewalInfo): Promise<JWSRenewalInfoDecodedPayload> {
-    return decodeJWS(info)
   }
 
   /**

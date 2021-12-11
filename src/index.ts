@@ -7,9 +7,11 @@ export {
   ExpirationIntent,
   OfferType,
   PriceIncreaseStatus,
-  OrderLookupStatus
+  OrderLookupStatus,
+  NotificationType,
+  NotificationSubtype
 } from "./Models"
 
-export { decodeNotificationPayload } from "./AppStoreServerNotifications"
+export { decodeTransactions, decodeTransaction, decodeRenewalInfo, decodeNotificationPayload } from "./Decoding"
 
 export { AppStoreError, CertificateValidationError } from "./Errors"
