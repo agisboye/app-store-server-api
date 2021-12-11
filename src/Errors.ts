@@ -1,6 +1,10 @@
-export interface AppStoreError extends Error {
+export class AppStoreError extends Error {
   errorCode: number
-  errorMessage: string
+
+  constructor(errorCode: number, errorMessage: string) {
+    super(errorMessage)
+    this.errorCode = errorCode
+  }
 }
 
 export class CertificateValidationError extends Error {

@@ -109,8 +109,8 @@ export class AppStoreServerAPI {
       case 400:
       case 404:
       case 500:
-        const body = (await result.json()) as AppStoreError
-        throw body
+        const body = await result.json()
+        throw new AppStoreError(body.errorCode, body.errorMessage)
 
       case 401:
         this.token = undefined
