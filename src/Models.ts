@@ -180,6 +180,7 @@ export enum NotificationType {
   PriceIncrease = "PRICE_INCREASE",
   Refund = "REFUND",
   RefundDeclined = "REFUND_DECLINED",
+  RenewalExtended = "RENEWAL_EXTENDED",
   Revoke = "REVOKE",
   Subscribed = "SUBSCRIBED"
 }
