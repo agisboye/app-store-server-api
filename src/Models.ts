@@ -1,6 +1,6 @@
 export enum Environment {
-  Production = "production",
-  Sandbox = "sandbox"
+  Production = "Production",
+  Sandbox = "Sandbox"
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/historyresponse
