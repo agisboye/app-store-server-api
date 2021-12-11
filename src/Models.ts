@@ -151,7 +151,7 @@ export enum OrderLookupStatus {
 // https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
 export interface DecodedNotificationPayload {
   notificationType: NotificationType
-  subtype: NotificationSubtype
+  subtype?: NotificationSubtype
   notificationUUID: string
   notificationVersion: number
   data: NotificationData
