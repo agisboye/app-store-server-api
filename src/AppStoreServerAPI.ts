@@ -44,7 +44,7 @@ export class AppStoreServerAPI {
    * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
    */
   async getTransactionHistory(originalTransactionId: string, revision?: string): Promise<HistoryResponse> {
-    const query = revision ? `?query=${revision}` : ""
+    const query = revision ? `?revision=${revision}` : ""
     return this.makeRequest(`${this.baseUrl}/inApps/v1/history/${originalTransactionId}${query}`)
   }
 
