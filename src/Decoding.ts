@@ -72,7 +72,10 @@ function validateCertificates(certificates: string[]) {
   // Check that each certificate, except for the last, is issued by the subsequent one.
   if (certificates.length >= 2) {
     for (let i = 0; i < x509certs.length - 1; i++) {
-      if (x509certs[i].checkIssued(x509certs[i + 1]) === false) {
+      const subject = x509certs[i]
+      const issuer = x509certs[i + 1]
+
+      if (subject.checkIssued(issuer) === false || subject.verify(issuer.publicKey) === false) {
         throw new CertificateValidationError(certificates)
       }
     }
