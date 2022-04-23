@@ -19,6 +19,7 @@ export {
   HistoryResponse,
   SubscriptionGroupIdentifierItem,
   OrderLookupResponse,
+  DecodedNotificationPayload,
 } from "./Models"
 
 export { decodeTransactions, decodeTransaction, decodeRenewalInfo, decodeNotificationPayload } from "./Decoding"
