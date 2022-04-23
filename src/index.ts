@@ -7,9 +7,6 @@ export {
   ExpirationIntent,
   OfferType,
   PriceIncreaseStatus,
-  OrderLookupStatus,
-  NotificationType,
-  NotificationSubtype,
   JWSTransactionDecodedPayload,
   OwnershipType,
   TransactionType,
@@ -19,7 +16,11 @@ export {
   HistoryResponse,
   SubscriptionGroupIdentifierItem,
   OrderLookupResponse,
+  OrderLookupStatus,
   DecodedNotificationPayload,
+  NotificationData,
+  NotificationType,
+  NotificationSubtype
 } from "./Models"
 
 export { decodeTransactions, decodeTransaction, decodeRenewalInfo, decodeNotificationPayload } from "./Decoding"
