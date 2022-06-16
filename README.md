@@ -30,9 +30,9 @@ To get your issuer ID, you must [create an API key for App Store Connect](https:
 
 ### Create a client
 ```javascript
-const { AppStoreServerAPI, Environment } = require("app-store-server-api")
+const { AppStoreServerAPI, Environment, decodeRenewalInfo, decodeTransaction, decodeTransactions } = require("app-store-server-api")
 // or
-import { AppStoreServerAPI, Environment } from "app-store-server-api"
+import { AppStoreServerAPI, Environment, decodeRenewalInfo, decodeTransaction, decodeTransactions } from "app-store-server-api"
 
 const KEY = 
 `-----BEGIN PRIVATE KEY-----
@@ -55,7 +55,7 @@ const api = new AppStoreServerAPI(
 const response = await api.getTransactionHistory(originalTransactionId)
 
 // Decoding not only reveals the contents of the transactions but also verifies that they were signed by Apple.
-const transactions = await api.decodeTransactions(response.signedTransactions)
+const transactions = await decodeTransactions(response.signedTransactions)
 
 for (let transaction of transactions) {
   // Do something with your transactions...
@@ -76,8 +76,8 @@ const response = await api.getSubscriptionStatuses(originalTransactionId)
 // Find the transaction you're looking for
 const item = response.data[0].lastTransactions.find(item => item.originalTransactionId === originalTransactionId)
 
-const transactionInfo = await api.decodeTransaction(item.signedTransactionInfo)
-const renewalInfo = await api.decodeRenewalInfo(item.signedRenewalInfo)
+const transactionInfo = await decodeTransaction(item.signedTransactionInfo)
+const renewalInfo = await decodeRenewalInfo(item.signedRenewalInfo)
 ```
 
 ### Order lookup
@@ -88,7 +88,7 @@ import { OrderLookupStatus } from "app-store-server-api"
 const response = await api.lookupOrder(orderId)
 
 if (response.orderLookupStatus === OrderLookupStatus.Valid) {
-    const transactions = await api.decodeTransactions(response.signedTransactions)
+    const transactions = await decodeTransactions(response.signedTransactions)
     /// ...
 }
 ```
