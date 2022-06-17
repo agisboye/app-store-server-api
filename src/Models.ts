@@ -153,7 +153,7 @@ export interface DecodedNotificationPayload {
   notificationType: NotificationType
   subtype?: NotificationSubtype
   notificationUUID: string
-  version: string // Apple incorrectly calls this `notificationVersion` in their documentation.
+  version: string
   data: NotificationData
 }
 
