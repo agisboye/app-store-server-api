@@ -154,6 +154,7 @@ export interface DecodedNotificationPayload {
   subtype?: NotificationSubtype
   notificationUUID: string
   version: string
+  signedDate: number // UNIX timestamp in ms
   data: NotificationData
 }
 
