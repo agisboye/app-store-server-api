@@ -27,6 +27,7 @@ export interface JWSDecodedHeader {
 export interface JWSTransactionDecodedPayload {
   appAccountToken?: string
   bundleId: string
+  environment: Environment
   expiresDate?: number // UNIX timestamp in ms
   inAppOwnershipType: OwnershipType
   isUpgraded?: boolean
@@ -98,6 +99,7 @@ export enum SubscriptionStatus {
 export interface JWSRenewalInfoDecodedPayload {
   autoRenewProductId: string
   autoRenewStatus: AutoRenewStatus
+  environment: Environment
   expirationIntent?: ExpirationIntent
   gracePeriodExpiresDate?: number
   isInBillingRetryPeriod?: boolean
@@ -106,6 +108,7 @@ export interface JWSRenewalInfoDecodedPayload {
   originalTransactionId: string
   priceIncreaseStatus?: PriceIncreaseStatus
   productId: string
+  recentSubscriptionStartDate: number // UNIX timestamp in ms
   signedDate: number // UNIX timestamp in ms
 }
 
