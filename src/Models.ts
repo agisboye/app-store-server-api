@@ -3,6 +3,11 @@ export enum Environment {
   Sandbox = "Sandbox"
 }
 
+/**
+ * UNIX timestamp in milliseconds
+ */
+export type Timestamp = number
+
 // https://developer.apple.com/documentation/appstoreserverapi/historyresponse
 export interface HistoryResponse {
   appAppleId: string
@@ -28,19 +33,19 @@ export interface JWSTransactionDecodedPayload {
   appAccountToken?: string
   bundleId: string
   environment: Environment
-  expiresDate?: number // UNIX timestamp in ms
+  expiresDate?: Timestamp
   inAppOwnershipType: OwnershipType
   isUpgraded?: boolean
   offerIdentifier?: string
   offerType?: OfferType
-  originalPurchaseDate: number // UNIX timestamp in ms
+  originalPurchaseDate: Timestamp
   originalTransactionId: string
   productId: string
-  purchaseDate: number // UNIX timestamp in ms
+  purchaseDate: Timestamp
   quantity: number
-  revocationDate?: number // UNIX timestamp in ms
+  revocationDate?: Timestamp
   revocationReason?: number
-  signedDate: number // UNIX timestamp in ms
+  signedDate: Timestamp
   subscriptionGroupIdentifier?: string
   transactionId: string
   type: TransactionType
@@ -101,15 +106,15 @@ export interface JWSRenewalInfoDecodedPayload {
   autoRenewStatus: AutoRenewStatus
   environment: Environment
   expirationIntent?: ExpirationIntent
-  gracePeriodExpiresDate?: number
+  gracePeriodExpiresDate?: Timestamp
   isInBillingRetryPeriod?: boolean
   offerIdentifier?: string
   offerType?: OfferType
   originalTransactionId: string
   priceIncreaseStatus?: PriceIncreaseStatus
   productId: string
-  recentSubscriptionStartDate: number // UNIX timestamp in ms
-  signedDate: number // UNIX timestamp in ms
+  recentSubscriptionStartDate: Timestamp
+  signedDate: Timestamp
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/autorenewstatus
@@ -157,7 +162,7 @@ export interface DecodedNotificationPayload {
   subtype?: NotificationSubtype
   notificationUUID: string
   version: string
-  signedDate: number // UNIX timestamp in ms
+  signedDate: Timestamp
   data: NotificationData
 }
 
