@@ -1,7 +1,7 @@
 import fetch from "node-fetch"
 import { v4 as uuidv4 } from "uuid"
 import * as jose from "jose"
-import { Environment, HistoryResponse, OrderLookupResponse, StatusResponse } from "./Models"
+import { Environment, HistoryResponse, OrderLookupResponse, OwnershipType, StatusResponse, Timestamp } from "./Models"
 import { AppStoreError } from "./Errors"
 
 export class AppStoreServerAPI {
@@ -43,9 +43,17 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
    */
-  async getTransactionHistory(originalTransactionId: string, revision?: string): Promise<HistoryResponse> {
-    const query = revision ? `?revision=${revision}` : ""
-    return this.makeRequest(`${this.baseUrl}/inApps/v1/history/${originalTransactionId}${query}`)
+  async getTransactionHistory(
+    originalTransactionId: string,
+    query: TransactionHistoryQuery = {}
+  ): Promise<HistoryResponse> {
+    const url = new URL(`${this.baseUrl}/inApps/v1/history/${originalTransactionId}`)
+
+    for (const [key, value] of Object.entries(query)) {
+      url.searchParams.set(key, value.toString())
+    }
+
+    return this.makeRequest(url.toString())
   }
 
   /**
@@ -139,4 +147,32 @@ export class AppStoreServerAPI {
 
     return !this.tokenExpiry || this.tokenExpiry < cutoff
   }
+}
+
+export enum SortParameter {
+  Ascending = "ASCENDING",
+  Descending = "DESCENDING"
+}
+
+export enum ProductTypeParameter {
+  AutoRenewable = "AUTO_RENEWABLE",
+  NonRenewable = "NON_RENEWABLE",
+  Consumable = "CONSUMABLE",
+  NonConsumable = "NON_CONSUMABLE"
+}
+
+/**
+ * The query parameters that can be passed to the history endpoint
+ * to filter results and change sort order.
+ */
+export interface TransactionHistoryQuery {
+  revision?: string
+  sort?: SortParameter
+  startDate?: Timestamp
+  endDate?: Timestamp
+  productType?: ProductTypeParameter
+  productId?: string
+  subscriptionGroupIdentifier?: string
+  inAppOwnershipType?: OwnershipType
+  excludeRevoked?: boolean
 }
