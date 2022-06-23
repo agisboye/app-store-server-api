@@ -113,6 +113,7 @@ WWDC videos:
 - [Manage in-app purchases on your server](https://developer.apple.com/videos/play/wwdc2021/10174/)
 - [Meet StoreKit 2](https://developer.apple.com/videos/play/wwdc2021/10114/)
 - [Support customers and handle refunds](https://developer.apple.com/videos/play/wwdc2021/10175/)
+- [What's new with in-app purchase](https://developer.apple.com/videos/play/wwdc2022/10007/)
 
 ## License
 MIT
