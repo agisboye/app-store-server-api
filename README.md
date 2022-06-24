@@ -114,15 +114,17 @@ const response = await api.requestTestNotification()
 const response = await api.getTestNotificationStatus("ae0e2185-a3c6-47e4-b41a-6ef4bc86314e_1656062546521")
 ```
 
-### Get notification history
+### Notification history
 ```javascript
+// Start and end date are required. 
+// The earliest supported start date is June 6th (the start of WWDC 2022).
 const response = await api.getNotificationHistory({
   startDate: 1654466400000, // June 6th 2022
   endDate: new Date().getTime()
 })
 
 // Check if there are more items.
-if (history.hasMore) {
+if (response.hasMore) {
   // Use history.paginationToken to fetch additional items.
 }
 ```
