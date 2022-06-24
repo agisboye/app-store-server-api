@@ -1,8 +1,25 @@
 import fetch from "node-fetch"
 import { v4 as uuidv4 } from "uuid"
 import * as jose from "jose"
-import { Environment, HistoryResponse, OrderLookupResponse, OwnershipType, StatusResponse, Timestamp } from "./Models"
+import {
+  CheckTestNotificationResponse,
+  Environment,
+  HistoryResponse,
+  NotificationHistoryQuery,
+  NotificationHistoryRequest,
+  NotificationHistoryResponse,
+  OrderLookupResponse,
+  SendTestNotificationResponse,
+  StatusResponse,
+  TransactionHistoryQuery
+} from "./Models"
 import { AppStoreError } from "./Errors"
+
+type HTTPMethod = "GET" | "POST"
+
+interface QueryConvertible {
+  [key: string]: string | number | boolean
+}
 
 export class AppStoreServerAPI {
   // The maximum age that an authentication token is allowed to have, as decided by Apple.
@@ -47,39 +64,63 @@ export class AppStoreServerAPI {
     originalTransactionId: string,
     query: TransactionHistoryQuery = {}
   ): Promise<HistoryResponse> {
-    const url = new URL(`${this.baseUrl}/inApps/v1/history/${originalTransactionId}`)
-
-    for (const [key, value] of Object.entries(query)) {
-      url.searchParams.set(key, value.toString())
-    }
-
-    return this.makeRequest(url.toString())
+    const path = this.addQuery(`/inApps/v1/history/${originalTransactionId}`, { ...query })
+    return this.makeRequest("GET", path)
   }
 
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_all_subscription_statuses
    */
   async getSubscriptionStatuses(originalTransactionId: string): Promise<StatusResponse> {
-    return this.makeRequest(`${this.baseUrl}/inApps/v1/subscriptions/${originalTransactionId}`)
+    return this.makeRequest("GET", `/inApps/v1/subscriptions/${originalTransactionId}`)
   }
 
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/look_up_order_id
    */
   async lookupOrder(orderId: string): Promise<OrderLookupResponse> {
-    return this.makeRequest(`${this.baseUrl}/inApps/v1/lookup/${orderId}`)
+    return this.makeRequest("GET", `/inApps/v1/lookup/${orderId}`)
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/request_a_test_notification
+   */
+  async requestTestNotification(): Promise<SendTestNotificationResponse> {
+    return this.makeRequest("POST", "/inApps/v1/notifications/test")
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/get_test_notification_status
+   */
+  async getTestNotificationStatus(id: string): Promise<CheckTestNotificationResponse> {
+    return this.makeRequest("GET", `/inApps/v1/notifications/test/${id}`)
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/get_test_notification_status
+   */
+  async getNotificationHistory(
+    request: NotificationHistoryRequest,
+    query: NotificationHistoryQuery = {}
+  ): Promise<NotificationHistoryResponse> {
+    const path = this.addQuery("/inApps/v1/notifications/history", { ...query })
+    return this.makeRequest("POST", path, request)
   }
 
   /**
    * Performs a network request against the API and handles the result.
    */
-  private async makeRequest(url: string): Promise<any> {
+  private async makeRequest(method: HTTPMethod, path: string, body?: any): Promise<any> {
     const token = await this.getToken()
+    const url = this.baseUrl + path
+    const serializedBody = body ? JSON.stringify(body) : undefined
 
     const result = await fetch(url, {
-      method: "GET",
+      method: method,
+      body: serializedBody,
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
       }
     })
 
@@ -147,32 +188,24 @@ export class AppStoreServerAPI {
 
     return !this.tokenExpiry || this.tokenExpiry < cutoff
   }
-}
 
-export enum SortParameter {
-  Ascending = "ASCENDING",
-  Descending = "DESCENDING"
-}
+  /**
+   * Serializes a query object into a query string and appends it
+   * the provided path.
+   */
+  private addQuery(path: string, query: QueryConvertible): string {
+    const params = new URLSearchParams()
 
-export enum ProductTypeParameter {
-  AutoRenewable = "AUTO_RENEWABLE",
-  NonRenewable = "NON_RENEWABLE",
-  Consumable = "CONSUMABLE",
-  NonConsumable = "NON_CONSUMABLE"
-}
+    for (const [key, value] of Object.entries(query)) {
+      params.set(key, value.toString())
+    }
 
-/**
- * The query parameters that can be passed to the history endpoint
- * to filter results and change sort order.
- */
-export interface TransactionHistoryQuery {
-  revision?: string
-  sort?: SortParameter
-  startDate?: Timestamp
-  endDate?: Timestamp
-  productType?: ProductTypeParameter
-  productId?: string
-  subscriptionGroupIdentifier?: string
-  inAppOwnershipType?: OwnershipType
-  excludeRevoked?: boolean
+    const queryString = params.toString()
+
+    if (queryString === "") {
+      return path
+    } else {
+      return `${path}?${queryString}`
+    }
+  }
 }

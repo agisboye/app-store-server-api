@@ -2,7 +2,8 @@
 A Node.js client for the [App Store Server API](https://developer.apple.com/documentation/appstoreserverapi).
 
 ## Features
-- History, subscription status and order lookup endpoints
+- Transaction history, subscription status and order lookup endpoints
+- Notification test and history endpoints
 - Typed responses (i.e. you get auto-complete for the fields in the response)
 - Manages authentication tokens for you
 - Helpers to decode JWS items
@@ -63,9 +64,18 @@ for (let transaction of transactions) {
 
 // The response contains at most 20 entries. You can check to see if there are more.
 if (response.hasMore) {
-  const nextResponse = await api.getTransactionHistory(originalTransactionId, response.revision)
+  const nextResponse = await api.getTransactionHistory(originalTransactionId, { revision: response.revision })
   // ...
 }
+```
+
+The library supports the filter and sort options introduced at WWDC 2022.
+See [Get Transaction History](https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history) for a list of available options.
+```javascript
+const response = await api.getTransactionHistory(originalTransactionId, {
+    productType: ProductTypeParameter.AutoRenewable,
+    sort: SortParameter.Descending,
+  })
 ```
 
 
@@ -93,8 +103,32 @@ if (response.orderLookupStatus === OrderLookupStatus.Valid) {
 }
 ```
 
-### Server notifications
-While not exactly part of the App Store Server API, App Store Server Notifications (version 2) is closely related and uses some of the same types and encoding format as the API. For that reason this package includes a function to help you decode notifications (which will also verify their signature).
+### Request test notification
+```javascript
+const response = await api.requestTestNotification()
+// response.testNotificationToken identifies the notification that will be sent.
+```
+
+### Get test notification status
+```javascript
+const response = await api.getTestNotificationStatus("ae0e2185-a3c6-47e4-b41a-6ef4bc86314e_1656062546521")
+```
+
+### Get test notification status
+```javascript
+const response = await api.getNotificationHistory({
+  startDate: 1654466400000, // June 6th 2022
+  endDate: new Date().getTime()
+})
+
+// Check if there are more items.
+if (history.hasMore) {
+  // Use history.paginationToken to fetch additional items.
+}
+```
+
+### Decoding server notifications
+The App Store Server API and App Store Server Notifications (version 2) are closely related and use some of the same types and encoding formats. This library includes a function to help you decode notifications (which will also verify their signature).
 
 ```javascript
 import { decodeNotificationPayload } from "app-store-server-api"

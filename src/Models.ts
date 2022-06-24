@@ -8,6 +8,34 @@ export enum Environment {
  */
 export type Timestamp = number
 
+export enum SortParameter {
+  Ascending = "ASCENDING",
+  Descending = "DESCENDING"
+}
+
+export enum ProductTypeParameter {
+  AutoRenewable = "AUTO_RENEWABLE",
+  NonRenewable = "NON_RENEWABLE",
+  Consumable = "CONSUMABLE",
+  NonConsumable = "NON_CONSUMABLE"
+}
+
+/**
+ * The query parameters that can be passed to the history endpoint
+ * to filter results and change sort order.
+ */
+export interface TransactionHistoryQuery {
+  revision?: string
+  sort?: SortParameter
+  startDate?: Timestamp
+  endDate?: Timestamp
+  productType?: ProductTypeParameter
+  productId?: string
+  subscriptionGroupIdentifier?: string
+  inAppOwnershipType?: OwnershipType
+  excludeRevoked?: boolean
+}
+
 // https://developer.apple.com/documentation/appstoreserverapi/historyresponse
 export interface HistoryResponse {
   appAppleId: string
@@ -209,4 +237,56 @@ export enum NotificationSubtype {
   BillingRecovery = "BILLING_RECOVERY",
   Pending = "PENDING",
   Accepted = "ACCEPTED"
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/sendtestnotificationresponse
+export interface SendTestNotificationResponse {
+  testNotificationToken: string
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/checktestnotificationresponse
+export interface CheckTestNotificationResponse {
+  firstSendAttemptResult: FirstSendAttemptResult
+  signedPayload: string
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/firstsendattemptresult
+export enum FirstSendAttemptResult {
+  Success = "SUCCESS",
+  TimedOut = "TIMED_OUT",
+  SslIssue = "SSL_ISSUE",
+  CircularRedirect = "CIRCULAR_REDIRECT",
+  NoResponse = "NO_RESPONSE",
+  SocketIssue = "SOCKET_ISSUE",
+  UnsupportedCharset = "UNSUPPORTED_CHARSET",
+  InvalidResponse = "INVALID_RESPONSE",
+  PrematureClose = "PREMATURE_CLOSE",
+  Other = "OTHER"
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/get_notification_history
+export interface NotificationHistoryQuery {
+  paginationToken?: string
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryrequest
+export interface NotificationHistoryRequest {
+  startDate: Timestamp
+  endDate: Timestamp
+  originalTransactionId?: string
+  notificationType?: NotificationType
+  notificationSubtype?: NotificationSubtype
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponse
+export interface NotificationHistoryResponse {
+  notificationHistory: NotificationHistoryResponseItem[]
+  hasMore: boolean
+  paginationToken: string
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponseitem
+export interface NotificationHistoryResponseItem {
+  firstSendAttemptResult: FirstSendAttemptResult
+  signedPayload: string
 }

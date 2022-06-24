@@ -2,6 +2,10 @@ export { AppStoreServerAPI } from "./AppStoreServerAPI"
 
 export {
   Environment,
+  Timestamp,
+  SortParameter,
+  ProductTypeParameter,
+  TransactionHistoryQuery,
   SubscriptionStatus,
   AutoRenewStatus,
   ExpirationIntent,
@@ -20,7 +24,14 @@ export {
   DecodedNotificationPayload,
   NotificationData,
   NotificationType,
-  NotificationSubtype
+  NotificationSubtype,
+  SendTestNotificationResponse,
+  CheckTestNotificationResponse,
+  FirstSendAttemptResult,
+  NotificationHistoryQuery,
+  NotificationHistoryRequest,
+  NotificationHistoryResponse,
+  NotificationHistoryResponseItem
 } from "./Models"
 
 export { decodeTransactions, decodeTransaction, decodeRenewalInfo, decodeNotificationPayload } from "./Decoding"
