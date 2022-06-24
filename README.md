@@ -114,7 +114,7 @@ const response = await api.requestTestNotification()
 const response = await api.getTestNotificationStatus("ae0e2185-a3c6-47e4-b41a-6ef4bc86314e_1656062546521")
 ```
 
-### Get test notification status
+### Get notification history
 ```javascript
 const response = await api.getNotificationHistory({
   startDate: 1654466400000, // June 6th 2022
