@@ -72,10 +72,13 @@ if (response.hasMore) {
 The library supports the filter and sort options introduced at WWDC 2022.
 See [Get Transaction History](https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history) for a list of available options.
 ```javascript
+// Import parameter types
+import { ProductTypeParameter, SortParameter } from "app-store-server-api"
+
 const response = await api.getTransactionHistory(originalTransactionId, {
-    productType: ProductTypeParameter.AutoRenewable,
-    sort: SortParameter.Descending,
-  })
+  productType: ProductTypeParameter.AutoRenewable,
+  sort: SortParameter.Descending,
+})
 ```
 
 
