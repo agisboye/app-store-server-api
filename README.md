@@ -100,7 +100,7 @@ import { OrderLookupStatus } from "app-store-server-api"
 
 const response = await api.lookupOrder(orderId)
 
-if (response.orderLookupStatus === OrderLookupStatus.Valid) {
+if (response.status === OrderLookupStatus.Valid) {
     const transactions = await decodeTransactions(response.signedTransactions)
     /// ...
 }
