@@ -174,7 +174,7 @@ export enum PriceIncreaseStatus {
 
 // https://developer.apple.com/documentation/appstoreserverapi/orderlookupresponse
 export interface OrderLookupResponse {
-  orderLookupStatus: OrderLookupStatus
+  status: OrderLookupStatus
   signedTransactions: JWSTransaction[]
 }
 
