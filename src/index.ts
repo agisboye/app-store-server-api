@@ -36,4 +36,6 @@ export {
 
 export { decodeTransactions, decodeTransaction, decodeRenewalInfo, decodeNotificationPayload } from "./Decoding"
 
+export { APPLE_ROOT_CA_G3_FINGERPRINT } from "./AppleRootCertificate"
+
 export { AppStoreError, CertificateValidationError } from "./Errors"
