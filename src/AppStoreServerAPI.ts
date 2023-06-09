@@ -11,6 +11,7 @@ import {
   OrderLookupResponse,
   SendTestNotificationResponse,
   StatusResponse,
+  SubscriptionStatusesQuery,
   TransactionHistoryQuery,
   TransactionInfoResponse
 } from "./Models"
@@ -19,7 +20,7 @@ import { AppStoreError } from "./Errors"
 type HTTPMethod = "GET" | "POST"
 
 interface QueryConvertible {
-  [key: string]: string | number | boolean
+  [key: string]: string | number | boolean | number[]
 }
 
 export class AppStoreServerAPI {
@@ -79,8 +80,9 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_all_subscription_statuses
    */
-  async getSubscriptionStatuses(transactionId: string): Promise<StatusResponse> {
-    return this.makeRequest("GET", `/inApps/v1/subscriptions/${transactionId}`)
+  async getSubscriptionStatuses(transactionId: string, query: SubscriptionStatusesQuery = {}): Promise<StatusResponse> {
+    const path = this.addQuery(`/inApps/v1/subscriptions/${transactionId}`, { ...query })
+    return this.makeRequest("GET", path)
   }
 
   /**
@@ -205,7 +207,13 @@ export class AppStoreServerAPI {
     const params = new URLSearchParams()
 
     for (const [key, value] of Object.entries(query)) {
-      params.set(key, value.toString())
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          params.append(key, item.toString())
+        }
+      } else {
+        params.set(key, value.toString())
+      }
     }
 
     const queryString = params.toString()

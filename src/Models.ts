@@ -29,6 +29,7 @@ export enum ProductTypeParameter {
 /**
  * The query parameters that can be passed to the history endpoint
  * to filter results and change sort order.
+ * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
  */
 export interface TransactionHistoryQuery {
   revision?: string
@@ -39,7 +40,7 @@ export interface TransactionHistoryQuery {
   productId?: string
   subscriptionGroupIdentifier?: string
   inAppOwnershipType?: OwnershipType
-  excludeRevoked?: boolean
+  revoked?: boolean
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/historyresponse
@@ -111,6 +112,10 @@ export enum TransactionType {
 export enum TransactionReason {
   Purchase = "PURCHASE",
   Renewal = "RENEWAL"
+}
+
+export interface SubscriptionStatusesQuery {
+  status?: SubscriptionStatus[]
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/statusresponse
@@ -284,15 +289,20 @@ export interface SendTestNotificationResponse {
 
 // https://developer.apple.com/documentation/appstoreserverapi/checktestnotificationresponse
 export interface CheckTestNotificationResponse {
-  firstSendAttemptResult: FirstSendAttemptResult
+  sendAttempts: SendAttempt[]
   signedPayload: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/firstsendattemptresult
-export enum FirstSendAttemptResult {
+export interface SendAttempt {
+  attemptDate: Timestamp
+  sendAttemptResult: SendAttemptResult
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/sendattemptresult
+export enum SendAttemptResult {
   Success = "SUCCESS",
   TimedOut = "TIMED_OUT",
-  SslIssue = "SSL_ISSUE",
+  TlsIssue = "TLS_ISSUE",
   CircularRedirect = "CIRCULAR_REDIRECT",
   NoResponse = "NO_RESPONSE",
   SocketIssue = "SOCKET_ISSUE",
@@ -311,9 +321,10 @@ export interface NotificationHistoryQuery {
 export interface NotificationHistoryRequest {
   startDate: Timestamp
   endDate: Timestamp
-  originalTransactionId?: string
   notificationType?: NotificationType
   notificationSubtype?: NotificationSubtype
+  onlyFailures?: boolean
+  transactionId?: string
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponse
@@ -325,6 +336,6 @@ export interface NotificationHistoryResponse {
 
 // https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponseitem
 export interface NotificationHistoryResponseItem {
-  firstSendAttemptResult: FirstSendAttemptResult
+  sendAttempts: SendAttempt[]
   signedPayload: string
 }
