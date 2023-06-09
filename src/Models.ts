@@ -8,6 +8,12 @@ export enum Environment {
  */
 export type Timestamp = number
 
+/**
+ * ISO 3166-1 Alpha-3 country code
+ * https://developer.apple.com/documentation/appstoreservernotifications/storefrontcountrycode
+ */
+export type StorefrontCountryCode = string
+
 export enum SortParameter {
   Ascending = "ASCENDING",
   Descending = "DESCENDING"
@@ -74,8 +80,11 @@ export interface JWSTransactionDecodedPayload {
   revocationDate?: Timestamp
   revocationReason?: number
   signedDate: Timestamp
+  storefront: StorefrontCountryCode
+  storefrontId: string
   subscriptionGroupIdentifier?: string
   transactionId: string
+  transactionReason: TransactionReason
   type: TransactionType
   webOrderLineItemId: string
 }
@@ -92,6 +101,12 @@ export enum TransactionType {
   NonConsumable = "Non-Consumable",
   Consumable = "Consumable",
   NonRenewingSubscription = "Non-Renewing Subscription"
+}
+
+// https://developer.apple.com/documentation/appstoreservernotifications/transactionreason
+export enum TransactionReason {
+  Purchase = "PURCHASE",
+  Renewal = "RENEWAL"
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/statusresponse
@@ -142,6 +157,7 @@ export interface JWSRenewalInfoDecodedPayload {
   priceIncreaseStatus?: PriceIncreaseStatus
   productId: string
   recentSubscriptionStartDate: Timestamp
+  renewalDate: Timestamp
   signedDate: Timestamp
 }
 
@@ -192,6 +208,7 @@ export interface DecodedNotificationPayload {
   version: string
   signedDate: Timestamp
   data: NotificationData
+  summary: NotificationSummary
 }
 
 // https://developer.apple.com/documentation/appstoreservernotifications/data
@@ -202,6 +219,19 @@ export interface NotificationData {
   environment: Environment
   signedRenewalInfo: JWSRenewalInfo
   signedTransactionInfo: JWSTransaction
+  status?: SubscriptionStatus
+}
+
+// https://developer.apple.com/documentation/appstoreservernotifications/summary
+export interface NotificationSummary {
+  requestIdentifier: string
+  environment: Environment
+  appAppleId: string
+  bundleId: string
+  productId: string
+  storefrontCountryCodes?: StorefrontCountryCode[]
+  failedCount: number
+  succeededCount: number
 }
 
 // https://developer.apple.com/documentation/appstoreservernotifications/notificationtype
@@ -219,7 +249,9 @@ export enum NotificationType {
   RefundDeclined = "REFUND_DECLINED",
   RenewalExtended = "RENEWAL_EXTENDED",
   Revoke = "REVOKE",
-  Subscribed = "SUBSCRIBED"
+  Subscribed = "SUBSCRIBED",
+  RenewalExtension = "RENEWAL_EXTENSION",
+  RefundReversed = "REFUND_REVERSED"
 }
 
 // https://developer.apple.com/documentation/appstoreservernotifications/subtype
@@ -236,7 +268,9 @@ export enum NotificationSubtype {
   GracePeriod = "GRACE_PERIOD",
   BillingRecovery = "BILLING_RECOVERY",
   Pending = "PENDING",
-  Accepted = "ACCEPTED"
+  Accepted = "ACCEPTED",
+  Summary = "SUMMARY",
+  Failure = "FAILURE"
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/sendtestnotificationresponse

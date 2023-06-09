@@ -3,6 +3,7 @@ export { AppStoreServerAPI } from "./AppStoreServerAPI"
 export {
   Environment,
   Timestamp,
+  StorefrontCountryCode,
   SortParameter,
   ProductTypeParameter,
   TransactionHistoryQuery,
@@ -14,6 +15,7 @@ export {
   JWSTransactionDecodedPayload,
   OwnershipType,
   TransactionType,
+  TransactionReason,
   StatusResponse,
   LastTransactionsItem,
   JWSRenewalInfoDecodedPayload,
@@ -23,6 +25,7 @@ export {
   OrderLookupStatus,
   DecodedNotificationPayload,
   NotificationData,
+  NotificationSummary,
   NotificationType,
   NotificationSubtype,
   SendTestNotificationResponse,
