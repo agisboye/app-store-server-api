@@ -163,6 +163,7 @@ const transactions = await decodeTransactions(response.signedTransactions, finge
 - [App Store Server API changelog](https://developer.apple.com/documentation/appstoreserverapi/app_store_server_api_changelog)
 - [App Store Server Notifications changelog](https://developer.apple.com/documentation/appstoreservernotifications/app_store_server_notifications_changelog/)
 - [Apple App Store Server Node.js Library](https://github.com/apple/app-store-server-library-node)
+
 WWDC videos:
 - [Manage in-app purchases on your server](https://developer.apple.com/videos/play/wwdc2021/10174/)
 - [Meet StoreKit 2](https://developer.apple.com/videos/play/wwdc2021/10114/)
