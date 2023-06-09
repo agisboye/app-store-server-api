@@ -11,7 +11,8 @@ import {
   OrderLookupResponse,
   SendTestNotificationResponse,
   StatusResponse,
-  TransactionHistoryQuery
+  TransactionHistoryQuery,
+  TransactionInfoResponse
 } from "./Models"
 import { AppStoreError } from "./Errors"
 
@@ -66,6 +67,13 @@ export class AppStoreServerAPI {
   ): Promise<HistoryResponse> {
     const path = this.addQuery(`/inApps/v1/history/${originalTransactionId}`, { ...query })
     return this.makeRequest("GET", path)
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_info
+   */
+  async getTransactionInfo(transactionId: string): Promise<TransactionInfoResponse> {
+    return this.makeRequest("GET", `/inApps/v1/transactions/${transactionId}`)
   }
 
   /**

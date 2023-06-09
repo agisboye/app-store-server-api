@@ -20,6 +20,7 @@ export {
   LastTransactionsItem,
   JWSRenewalInfoDecodedPayload,
   HistoryResponse,
+  TransactionInfoResponse,
   SubscriptionGroupIdentifierItem,
   OrderLookupResponse,
   OrderLookupStatus,

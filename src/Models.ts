@@ -52,6 +52,10 @@ export interface HistoryResponse {
   signedTransactions: JWSTransaction[]
 }
 
+export interface TransactionInfoResponse {
+  signedTransactionInfo: JWSTransaction
+}
+
 // https://developer.apple.com/documentation/appstoreserverapi/jwstransaction
 export type JWSTransaction = string
 
