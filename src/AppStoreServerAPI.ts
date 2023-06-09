@@ -62,10 +62,10 @@ export class AppStoreServerAPI {
    * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
    */
   async getTransactionHistory(
-    originalTransactionId: string,
+    transactionId: string,
     query: TransactionHistoryQuery = {}
   ): Promise<HistoryResponse> {
-    const path = this.addQuery(`/inApps/v1/history/${originalTransactionId}`, { ...query })
+    const path = this.addQuery(`/inApps/v1/history/${transactionId}`, { ...query })
     return this.makeRequest("GET", path)
   }
 
@@ -79,8 +79,8 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_all_subscription_statuses
    */
-  async getSubscriptionStatuses(originalTransactionId: string): Promise<StatusResponse> {
-    return this.makeRequest("GET", `/inApps/v1/subscriptions/${originalTransactionId}`)
+  async getSubscriptionStatuses(transactionId: string): Promise<StatusResponse> {
+    return this.makeRequest("GET", `/inApps/v1/subscriptions/${transactionId}`)
   }
 
   /**
