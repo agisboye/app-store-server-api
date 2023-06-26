@@ -107,7 +107,7 @@ export class AppStoreServerAPI {
   }
 
   /**
-   * https://developer.apple.com/documentation/appstoreserverapi/get_test_notification_status
+   * https://developer.apple.com/documentation/appstoreserverapi/get_notification_history
    */
   async getNotificationHistory(
     request: NotificationHistoryRequest,
