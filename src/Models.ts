@@ -227,6 +227,12 @@ interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePaylo
 }
 export type DecodedNotificationPayload = DecodedNotificationDataPayload | DecodedNotificationSummaryPayload;
 
+export function isDecodedNotificationDataPayload(
+  decodedNotificationPayload: DecodedNotificationPayload,
+): decodedNotificationPayload is DecodedNotificationDataPayload {
+  return 'data' in decodedNotificationPayload;
+}
+
 // https://developer.apple.com/documentation/appstoreservernotifications/data
 export interface NotificationData {
   appAppleId: string
