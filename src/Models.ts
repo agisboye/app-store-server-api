@@ -210,15 +210,22 @@ export enum OrderLookupStatus {
 }
 
 // https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
-export interface DecodedNotificationPayload {
-  notificationType: NotificationType
-  subtype?: NotificationSubtype
-  notificationUUID: string
-  version: string
-  signedDate: Timestamp
-  data: NotificationData
-  summary: NotificationSummary
+interface DecodedNotificationBasePayload {
+  notificationType: NotificationType;
+  subtype?: NotificationSubtype;
+  notificationUUID: string;
+  version: string;
+  signedDate: Timestamp;
 }
+interface DecodedNotificationDataPayload extends DecodedNotificationBasePayload {
+  data: NotificationData;
+  summary?: never;
+}
+interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePayload{
+  data?: never;
+  summary: NotificationSummary;
+}
+export type DecodedNotificationPayload = DecodedNotificationDataPayload | DecodedNotificationSummaryPayload;
 
 // https://developer.apple.com/documentation/appstoreservernotifications/data
 export interface NotificationData {
