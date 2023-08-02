@@ -27,6 +27,7 @@ export {
   OrderLookupStatus,
   DecodedNotificationPayload,
   isDecodedNotificationDataPayload,
+  isDecodedNotificationSummaryPayload,
   NotificationData,
   NotificationSummary,
   NotificationType,

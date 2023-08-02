@@ -233,6 +233,12 @@ export function isDecodedNotificationDataPayload(
   return 'data' in decodedNotificationPayload;
 }
 
+export function isDecodedNotificationSummaryPayload(
+  decodedNotificationPayload: DecodedNotificationPayload,
+): decodedNotificationPayload is DecodedNotificationSummaryPayload {
+  return 'summary' in decodedNotificationPayload;
+}
+
 // https://developer.apple.com/documentation/appstoreservernotifications/data
 export interface NotificationData {
   appAppleId: string
