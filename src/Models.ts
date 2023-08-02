@@ -217,14 +217,17 @@ interface DecodedNotificationBasePayload {
   version: string
   signedDate: Timestamp
 }
+
 interface DecodedNotificationDataPayload extends DecodedNotificationBasePayload {
   data: NotificationData
   summary?: never
 }
+
 interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePayload {
   data?: never
   summary: NotificationSummary
 }
+
 export type DecodedNotificationPayload = DecodedNotificationDataPayload | DecodedNotificationSummaryPayload
 
 export function isDecodedNotificationDataPayload(

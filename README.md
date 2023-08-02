@@ -136,7 +136,7 @@ if (response.hasMore) {
 The App Store Server API and App Store Server Notifications (version 2) are closely related and use some of the same types and encoding formats. This library includes a function to help you decode notifications (which will also verify their signature).
 
 ```javascript
-import { decodeNotificationPayload } from "app-store-server-api"
+import { decodeNotificationPayload, isDecodedNotificationDataPayload, isDecodedNotificationSummaryPayload } from "app-store-server-api"
 
 // signedPayload is the body sent by Apple
 const payload = await decodeNotificationPayload(signedPayload)
@@ -144,6 +144,16 @@ const payload = await decodeNotificationPayload(signedPayload)
 // You might want to check that the bundle ID matches that of your app
 if (payload.data.bundleId === APP_BUNDLE_ID) {
   // Handle the notification...
+}
+
+// Notifications can contain either a data field or a summary field but never both.
+// Use the provided type guards to determine which is present.
+if (isDecodedNotificationDataPayload(payload)) {
+  // payload is of type DecodedNotificationDataPayload
+}
+
+if (isdecodedNotificationSummaryPayload(payload)) {
+  // payload is of type DecodedNotificationSummaryPayload
 }
 ```
 
