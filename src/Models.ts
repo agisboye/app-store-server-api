@@ -211,32 +211,32 @@ export enum OrderLookupStatus {
 
 // https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
 interface DecodedNotificationBasePayload {
-  notificationType: NotificationType;
-  subtype?: NotificationSubtype;
-  notificationUUID: string;
-  version: string;
-  signedDate: Timestamp;
+  notificationType: NotificationType
+  subtype?: NotificationSubtype
+  notificationUUID: string
+  version: string
+  signedDate: Timestamp
 }
 interface DecodedNotificationDataPayload extends DecodedNotificationBasePayload {
-  data: NotificationData;
-  summary?: never;
+  data: NotificationData
+  summary?: never
 }
-interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePayload{
-  data?: never;
-  summary: NotificationSummary;
+interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePayload {
+  data?: never
+  summary: NotificationSummary
 }
-export type DecodedNotificationPayload = DecodedNotificationDataPayload | DecodedNotificationSummaryPayload;
+export type DecodedNotificationPayload = DecodedNotificationDataPayload | DecodedNotificationSummaryPayload
 
 export function isDecodedNotificationDataPayload(
-  decodedNotificationPayload: DecodedNotificationPayload,
+  decodedNotificationPayload: DecodedNotificationPayload
 ): decodedNotificationPayload is DecodedNotificationDataPayload {
-  return 'data' in decodedNotificationPayload;
+  return "data" in decodedNotificationPayload
 }
 
 export function isDecodedNotificationSummaryPayload(
-  decodedNotificationPayload: DecodedNotificationPayload,
+  decodedNotificationPayload: DecodedNotificationPayload
 ): decodedNotificationPayload is DecodedNotificationSummaryPayload {
-  return 'summary' in decodedNotificationPayload;
+  return "summary" in decodedNotificationPayload
 }
 
 // https://developer.apple.com/documentation/appstoreservernotifications/data
