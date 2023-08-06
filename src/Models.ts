@@ -218,12 +218,12 @@ interface DecodedNotificationBasePayload {
   signedDate: Timestamp
 }
 
-interface DecodedNotificationDataPayload extends DecodedNotificationBasePayload {
+export interface DecodedNotificationDataPayload extends DecodedNotificationBasePayload {
   data: NotificationData
   summary?: never
 }
 
-interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePayload {
+export interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePayload {
   data?: never
   summary: NotificationSummary
 }
