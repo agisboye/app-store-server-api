@@ -13,11 +13,13 @@ import {
   StatusResponse,
   SubscriptionStatusesQuery,
   TransactionHistoryQuery,
-  TransactionInfoResponse
+  TransactionInfoResponse,
+  ExtendRenewalDateResponse,
+  ExtendRenewalDateRequest
 } from "./Models"
 import { AppStoreError } from "./Errors"
 
-type HTTPMethod = "GET" | "POST"
+type HTTPMethod = "GET" | "POST" | "PUT"
 
 interface QueryConvertible {
   [key: string]: string | number | boolean | number[]
@@ -62,10 +64,7 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
    */
-  async getTransactionHistory(
-    transactionId: string,
-    query: TransactionHistoryQuery = {}
-  ): Promise<HistoryResponse> {
+  async getTransactionHistory(transactionId: string, query: TransactionHistoryQuery = {}): Promise<HistoryResponse> {
     const path = this.addQuery(`/inApps/v1/history/${transactionId}`, { ...query })
     return this.makeRequest("GET", path)
   }
@@ -90,6 +89,16 @@ export class AppStoreServerAPI {
    */
   async lookupOrder(orderId: string): Promise<OrderLookupResponse> {
     return this.makeRequest("GET", `/inApps/v1/lookup/${orderId}`)
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/extend_a_subscription_renewal_date
+   */
+  async extendSubscriptionRenewalDate(
+    originalTransactionId: string,
+    request: ExtendRenewalDateRequest
+  ): Promise<ExtendRenewalDateResponse> {
+    return this.makeRequest("PUT", `/inApps/v1/subscriptions/extend/${originalTransactionId}`, request)
   }
 
   /**
