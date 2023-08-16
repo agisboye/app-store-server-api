@@ -13,11 +13,13 @@ import {
   StatusResponse,
   SubscriptionStatusesQuery,
   TransactionHistoryQuery,
-  TransactionInfoResponse
+  TransactionInfoResponse,
+  ExtendRenewalDateRsponse,
+  ExtendRenewalDateRequest
 } from "./Models"
 import { AppStoreError } from "./Errors"
 
-type HTTPMethod = "GET" | "POST"
+type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE"
 
 interface QueryConvertible {
   [key: string]: string | number | boolean | number[]
@@ -98,6 +100,16 @@ export class AppStoreServerAPI {
   async requestTestNotification(): Promise<SendTestNotificationResponse> {
     return this.makeRequest("POST", "/inApps/v1/notifications/test")
   }
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/extend_a_subscription_renewal_date
+ */
+  async extendSubscriptionRenewalDate(
+    transactionId: string,
+    request: ExtendRenewalDateRequest): Promise<ExtendRenewalDateRsponse> {
+    return this.makeRequest('PUT', `/inApps/v1/subscriptions/extend/${transactionId}`, request)
+  }
+  
 
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_test_notification_status
