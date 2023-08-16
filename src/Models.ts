@@ -361,3 +361,24 @@ export interface NotificationHistoryResponseItem {
   sendAttempts: SendAttempt[]
   signedPayload: string
 }
+
+// https://developer.apple.com/documentation/appstoreserverapi/extendrenewaldaterequest
+export enum ExtendReasonCode {
+  UNDECLARED = 0,
+  CUSTOMER_SATISFACTION = 1,
+  OTHER_REASON = 2,
+  SERVICE_ISSUE = 3
+}
+export interface ExtendRenewalDateRequest {
+  extendByDays: number
+  extendReasonCode: ExtendReasonCode
+  requestIdentifier: string
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/extendrenewaldateresponse
+export interface ExtendRenewalDateResponse {
+  effectiveDate: Timestamp
+  originalTransactionId: string
+  success: boolean
+  webOrderLineItemId: string
+}
