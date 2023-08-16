@@ -106,7 +106,7 @@ export class AppStoreServerAPI {
  */
   async extendSubscriptionRenewalDate(
     transactionId: string,
-    request: ExtendRenewalDateRequest): Promise<ExtendRenewalDateRsponse> {
+    request: ExtendRenewalDateRequest): Promise<ExtendRenewalDateResponse> {
     return this.makeRequest('PUT', `/inApps/v1/subscriptions/extend/${transactionId}`, request)
   }
   

@@ -376,7 +376,7 @@ export interface ExtendRenewalDateRequest {
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/extendrenewaldateresponse
-export interface ExtendRenewalDateRsponse {
+export interface ExtendRenewalDateResponse {
   effectiveDate: Timestamp
   originalTransactionId: string
   success: boolean
