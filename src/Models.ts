@@ -369,6 +369,7 @@ export enum ExtendReasonCode {
   OTHER_REASON = 2,
   SERVICE_ISSUE = 3
 }
+
 export interface ExtendRenewalDateRequest {
   extendByDays: number
   extendReasonCode: ExtendReasonCode
