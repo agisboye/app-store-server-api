@@ -14,7 +14,7 @@ import {
   SubscriptionStatusesQuery,
   TransactionHistoryQuery,
   TransactionInfoResponse,
-  ExtendRenewalDateRsponse,
+  ExtendRenewalDateResponse,
   ExtendRenewalDateRequest
 } from "./Models"
 import { AppStoreError } from "./Errors"
