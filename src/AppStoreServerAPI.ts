@@ -149,7 +149,9 @@ export class AppStoreServerAPI {
 
     switch (result.status) {
       case 400:
+      case 403:
       case 404:
+      case 429:
       case 500:
         const body = await result.json()
         throw new AppStoreError(body.errorCode, body.errorMessage)
