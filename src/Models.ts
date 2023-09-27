@@ -248,7 +248,7 @@ export interface NotificationData {
   bundleId: string
   bundleVersion: number
   environment: Environment
-  signedRenewalInfo: JWSRenewalInfo
+  signedRenewalInfo?: JWSRenewalInfo
   signedTransactionInfo: JWSTransaction
   status?: SubscriptionStatus
 }
