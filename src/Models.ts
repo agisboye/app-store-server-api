@@ -71,14 +71,17 @@ export interface JWSDecodedHeader {
 export interface JWSTransactionDecodedPayload {
   appAccountToken?: string
   bundleId: string
+  currency: string
   environment: Environment
   expiresDate?: Timestamp
   inAppOwnershipType: OwnershipType
   isUpgraded?: boolean
+  offerDiscountType?: OfferDiscountType
   offerIdentifier?: string
   offerType?: OfferType
   originalPurchaseDate: Timestamp
   originalTransactionId: string
+  price: number
   productId: string
   purchaseDate: Timestamp
   quantity: number
@@ -92,6 +95,13 @@ export interface JWSTransactionDecodedPayload {
   transactionReason: TransactionReason
   type: TransactionType
   webOrderLineItemId: string
+}
+
+// https://developer.apple.com/documentation/appstoreserverapi/offerdiscounttype
+export enum OfferDiscountType {
+  FreeTrial = "FREE_TRIAL",
+  PayAsYouGo = "PAY_AS_YOU_GO",
+  PayUpFront = "PAY_UP_FRONT"
 }
 
 // https://developer.apple.com/documentation/appstoreserverapi/inappownershiptype
