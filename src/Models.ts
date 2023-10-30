@@ -99,7 +99,7 @@ export interface JWSTransactionDecodedPayload {
 
 // https://developer.apple.com/documentation/appstoreserverapi/offerdiscounttype
 export enum OfferDiscountType {
-  FreeTrail = "FREE_TRIAL",
+  FreeTrial = "FREE_TRIAL",
   PayAsYouGo = "PAY_AS_YOU_GO",
   PayUpFront = "PAY_UP_FRONT"
 }
