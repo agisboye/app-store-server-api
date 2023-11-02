@@ -13,6 +13,7 @@ export {
   OfferType,
   PriceIncreaseStatus,
   JWSTransactionDecodedPayload,
+  OfferDiscountType,
   OwnershipType,
   TransactionType,
   TransactionReason,
