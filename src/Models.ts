@@ -254,9 +254,9 @@ export function isDecodedNotificationSummaryPayload(
 
 // https://developer.apple.com/documentation/appstoreservernotifications/data
 export interface NotificationData {
-  appAppleId: string
+  appAppleId: number
   bundleId: string
-  bundleVersion: number
+  bundleVersion: string
   environment: Environment
   signedRenewalInfo?: JWSRenewalInfo
   signedTransactionInfo: JWSTransaction
