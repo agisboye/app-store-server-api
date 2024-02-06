@@ -306,6 +306,7 @@ export enum NotificationSubtype {
   Voluntary = "VOLUNTARY",
   BillingRetry = "BILLING_RETRY",
   PriceIncrease = "PRICE_INCREASE",
+  ProductNotForSale = "PRODUCT_NOT_FOR_SALE",
   GracePeriod = "GRACE_PERIOD",
   BillingRecovery = "BILLING_RECOVERY",
   Pending = "PENDING",
