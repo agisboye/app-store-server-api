@@ -1,3 +1,6 @@
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/environment
+ */
 export enum Environment {
   Production = "Production",
   Sandbox = "Sandbox"
@@ -43,7 +46,9 @@ export interface TransactionHistoryQuery {
   revoked?: boolean
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/historyresponse
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/historyresponse
+ */
 export interface HistoryResponse {
   appAppleId: string
   bundleId: string
@@ -53,21 +58,30 @@ export interface HistoryResponse {
   signedTransactions: JWSTransaction[]
 }
 
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/transactioninforesponse
+ */
 export interface TransactionInfoResponse {
   signedTransactionInfo: JWSTransaction
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/jwstransaction
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/jwstransaction
+ */
 export type JWSTransaction = string
 
-// https://developer.apple.com/documentation/appstoreserverapi/jwsdecodedheader
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/jwsdecodedheader
+ */
 export interface JWSDecodedHeader {
   alg: string
   kid: string
   x5c: string[]
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/jwstransactiondecodedpayload
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/jwstransactiondecodedpayload
+ */
 export interface JWSTransactionDecodedPayload {
   appAccountToken?: string
   bundleId: string
@@ -97,20 +111,26 @@ export interface JWSTransactionDecodedPayload {
   webOrderLineItemId: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/offerdiscounttype
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/offerdiscounttype
+ */
 export enum OfferDiscountType {
   FreeTrial = "FREE_TRIAL",
   PayAsYouGo = "PAY_AS_YOU_GO",
   PayUpFront = "PAY_UP_FRONT"
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/inappownershiptype
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/inappownershiptype
+ */
 export enum OwnershipType {
   Purchased = "PURCHASED",
   FamilyShared = "FAMILY_SHARED"
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/type
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/type
+ */
 export enum TransactionType {
   AutoRenewableSubscription = "Auto-Renewable Subscription",
   NonConsumable = "Non-Consumable",
@@ -118,7 +138,9 @@ export enum TransactionType {
   NonRenewingSubscription = "Non-Renewing Subscription"
 }
 
-// https://developer.apple.com/documentation/appstoreservernotifications/transactionreason
+/**
+ * https://developer.apple.com/documentation/appstoreservernotifications/transactionreason
+ */
 export enum TransactionReason {
   Purchase = "PURCHASE",
   Renewal = "RENEWAL"
@@ -128,7 +150,9 @@ export interface SubscriptionStatusesQuery {
   status?: SubscriptionStatus[]
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/statusresponse
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/statusresponse
+ */
 export interface StatusResponse {
   data: SubscriptionGroupIdentifierItem[]
   environment: Environment
@@ -136,13 +160,17 @@ export interface StatusResponse {
   bundleId: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/subscriptiongroupidentifieritem
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/subscriptiongroupidentifieritem
+ */
 export interface SubscriptionGroupIdentifierItem {
   subscriptionGroupIdentifier: string
   lastTransactions: LastTransactionsItem[]
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/lasttransactionsitem
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/lasttransactionsitem
+ */
 export interface LastTransactionsItem {
   originalTransactionId: string
   status: SubscriptionStatus
@@ -150,10 +178,14 @@ export interface LastTransactionsItem {
   signedTransactionInfo: JWSTransaction
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/jwsrenewalinfo
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/jwsrenewalinfo
+ */
 export type JWSRenewalInfo = string
 
-// https://developer.apple.com/documentation/appstoreserverapi/status
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/status
+ */
 export enum SubscriptionStatus {
   Active = 1,
   Expired = 2,
@@ -162,7 +194,9 @@ export enum SubscriptionStatus {
   Revoked = 5
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/jwsrenewalinfodecodedpayload
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/jwsrenewalinfodecodedpayload
+ */
 export interface JWSRenewalInfoDecodedPayload {
   autoRenewProductId: string
   autoRenewStatus: AutoRenewStatus
@@ -180,13 +214,17 @@ export interface JWSRenewalInfoDecodedPayload {
   signedDate: Timestamp
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/autorenewstatus
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/autorenewstatus
+ */
 export enum AutoRenewStatus {
   Off = 0,
   On = 1
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/expirationintent
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/expirationintent
+ */
 export enum ExpirationIntent {
   Canceled = 1,
   BillingError = 2,
@@ -194,32 +232,42 @@ export enum ExpirationIntent {
   ProductUnavailable = 4
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/offertype
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/offertype
+ */
 export enum OfferType {
   Introductory = 1,
   Promotional = 2,
   SubscriptionOfferCode = 3
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/priceincreasestatus
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/priceincreasestatus
+ */
 export enum PriceIncreaseStatus {
   NoResponse = 0,
   Consented = 1
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/orderlookupresponse
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/orderlookupresponse
+ */
 export interface OrderLookupResponse {
   status: OrderLookupStatus
   signedTransactions: JWSTransaction[]
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/orderlookupstatus
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/orderlookupstatus
+ */
 export enum OrderLookupStatus {
   Valid = 0,
   Invalid = 1
 }
 
-// https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
+/**
+ * https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
+ */
 interface DecodedNotificationBasePayload {
   notificationType: NotificationType
   subtype?: NotificationSubtype
@@ -252,7 +300,9 @@ export function isDecodedNotificationSummaryPayload(
   return "summary" in decodedNotificationPayload
 }
 
-// https://developer.apple.com/documentation/appstoreservernotifications/data
+/**
+ * https://developer.apple.com/documentation/appstoreservernotifications/data
+ */
 export interface NotificationData {
   appAppleId: number
   bundleId: string
@@ -263,7 +313,9 @@ export interface NotificationData {
   status?: SubscriptionStatus
 }
 
-// https://developer.apple.com/documentation/appstoreservernotifications/summary
+/**
+ * https://developer.apple.com/documentation/appstoreservernotifications/summary
+ */
 export interface NotificationSummary {
   requestIdentifier: string
   environment: Environment
@@ -275,7 +327,9 @@ export interface NotificationSummary {
   succeededCount: number
 }
 
-// https://developer.apple.com/documentation/appstoreservernotifications/notificationtype
+/**
+ * https://developer.apple.com/documentation/appstoreservernotifications/notificationtype
+ */
 export enum NotificationType {
   ConsumptionRequest = "CONSUMPTION_REQUEST",
   DidChangeRenewalPref = "DID_CHANGE_RENEWAL_PREF",
@@ -295,7 +349,9 @@ export enum NotificationType {
   RefundReversed = "REFUND_REVERSED"
 }
 
-// https://developer.apple.com/documentation/appstoreservernotifications/subtype
+/**
+ * https://developer.apple.com/documentation/appstoreservernotifications/subtype
+ */
 export enum NotificationSubtype {
   InitialBuy = "INITIAL_BUY",
   Resubscribe = "RESUBSCRIBE",
@@ -315,23 +371,32 @@ export enum NotificationSubtype {
   Failure = "FAILURE"
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/sendtestnotificationresponse
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/sendtestnotificationresponse
+ */
 export interface SendTestNotificationResponse {
   testNotificationToken: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/checktestnotificationresponse
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/checktestnotificationresponse
+ */
 export interface CheckTestNotificationResponse {
   sendAttempts: SendAttempt[]
   signedPayload: string
 }
 
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/sendattemptitem
+ */
 export interface SendAttempt {
   attemptDate: Timestamp
   sendAttemptResult: SendAttemptResult
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/sendattemptresult
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/sendattemptresult
+ */
 export enum SendAttemptResult {
   Success = "SUCCESS",
   TimedOut = "TIMED_OUT",
@@ -345,12 +410,16 @@ export enum SendAttemptResult {
   Other = "OTHER"
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/get_notification_history
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/get_notification_history
+ */
 export interface NotificationHistoryQuery {
   paginationToken?: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryrequest
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryrequest
+ */
 export interface NotificationHistoryRequest {
   startDate: Timestamp
   endDate: Timestamp
@@ -360,20 +429,26 @@ export interface NotificationHistoryRequest {
   transactionId?: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponse
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponse
+ */
 export interface NotificationHistoryResponse {
   notificationHistory: NotificationHistoryResponseItem[]
   hasMore: boolean
   paginationToken: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponseitem
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/notificationhistoryresponseitem
+ */
 export interface NotificationHistoryResponseItem {
   sendAttempts: SendAttempt[]
   signedPayload: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/extendrenewaldaterequest
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/extendreasoncode
+ */
 export enum ExtendReasonCode {
   UNDECLARED = 0,
   CUSTOMER_SATISFACTION = 1,
@@ -381,13 +456,18 @@ export enum ExtendReasonCode {
   SERVICE_ISSUE = 3
 }
 
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/extendrenewaldaterequest
+ */
 export interface ExtendRenewalDateRequest {
   extendByDays: number
   extendReasonCode: ExtendReasonCode
   requestIdentifier: string
 }
 
-// https://developer.apple.com/documentation/appstoreserverapi/extendrenewaldateresponse
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/extendrenewaldateresponse
+ */
 export interface ExtendRenewalDateResponse {
   effectiveDate: Timestamp
   originalTransactionId: string

@@ -26,7 +26,9 @@ interface QueryConvertible {
 }
 
 export class AppStoreServerAPI {
-  // The maximum age that an authentication token is allowed to have, as decided by Apple.
+  /**
+   * The maximum age that an authentication token is allowed to have, as decided by Apple.
+   */
   static readonly maxTokenAge: number = 3600 // seconds, = 1 hour
 
   readonly environment: Environment
