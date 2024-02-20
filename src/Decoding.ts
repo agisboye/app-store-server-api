@@ -1,5 +1,5 @@
-import { X509Certificate } from "crypto"
 import * as jose from "jose"
+import * as jsrsasign from "jsrsasign"
 import { APPLE_ROOT_CA_G3_FINGERPRINT } from "./AppleRootCertificate"
 import { CertificateValidationError } from "./Errors"
 import {
@@ -76,27 +76,64 @@ async function decodeJWS(token: string, rootCertFingerprint: string = APPLE_ROOT
 function validateCertificates(certificates: string[], rootCertFingerprint: string) {
   if (certificates.length === 0) throw new CertificateValidationError([])
 
-  const x509certs = certificates.map(c => new X509Certificate(c))
+  const x509certs = certificates.map(c => {
+    const cert = new jsrsasign.X509()
+    cert.readCertPEM(c)
+    return cert
+  })
 
   // Check dates
   const now = new Date()
-  const datesValid = x509certs.every(c => new Date(c.validFrom) < now && now < new Date(c.validTo))
+  const datesValid = x509certs.every(c => {
+    const notBefore = parseCertificateDate(c.getNotBefore())
+    const notAfter = parseCertificateDate(c.getNotAfter())
+    return notBefore <= now && now <= notAfter
+  })
   if (!datesValid) throw new CertificateValidationError(certificates)
 
   // Check that each certificate, except for the last, is issued by the subsequent one.
   if (certificates.length >= 2) {
-    for (let i = 0; i < x509certs.length - 1; i++) {
-      const subject = x509certs[i]
-      const issuer = x509certs[i + 1]
-
-      if (subject.checkIssued(issuer) === false || subject.verify(issuer.publicKey) === false) {
-        throw new CertificateValidationError(certificates)
-      }
+    const isValid = verifyCertificateChain(certificates)
+    if (!isValid) {
+      throw new CertificateValidationError(certificates)
     }
   }
 
   // Ensure that the last certificate in the chain is the expected root CA.
-  if (x509certs[x509certs.length - 1].fingerprint256 !== rootCertFingerprint) {
+  const fingerprint256 = generateSha256Fingerprint(certificates[certificates.length - 1])
+  if (fingerprint256 !== rootCertFingerprint) {
     throw new CertificateValidationError(certificates)
   }
+}
+
+const parseCertificateDate = (dateStr: string) => {
+  const year = parseInt(dateStr.substring(0, 2), 10) + 2000 // Assuming all dates are in the 2000s
+  const month = parseInt(dateStr.substring(2, 4), 10) - 1 // Month is 0-indexed in JavaScript Date
+  const day = parseInt(dateStr.substring(4, 6), 10)
+  const hour = parseInt(dateStr.substring(6, 8), 10)
+  const minute = parseInt(dateStr.substring(8, 10), 10)
+  const second = parseInt(dateStr.substring(10, 12), 10)
+
+  return new Date(Date.UTC(year, month, day, hour, minute, second))
+}
+
+const verifyCertificateChain = (certificates: string[]) => {
+  let valid = true
+  for (let i = 0; i < certificates.length; i++) {
+    let issuerIndex = i + 1
+    // If i == certificates.length - 1, self signed root ca
+    if (i == certificates.length - 1) issuerIndex = i
+    const issuerPubKey = jsrsasign.KEYUTIL.getKey(certificates[issuerIndex])
+    const certificate = new jsrsasign.X509()
+    certificate.readCertPEM(certificates[i])
+    valid = valid && certificate.verifySignature(issuerPubKey)
+  }
+
+  return valid
+}
+
+const generateSha256Fingerprint = (cert: string) => {
+  const hex = jsrsasign.pemtohex(cert)
+  const fingerprint = jsrsasign.KJUR.crypto.Util.hashHex(hex, "sha256")
+  return fingerprint.match(/.{2}/g)?.join(":").toUpperCase() ?? ""
 }
