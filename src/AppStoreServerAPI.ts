@@ -1,9 +1,12 @@
+import * as jose from "jose"
 import fetch from "node-fetch"
 import { v4 as uuidv4 } from "uuid"
-import * as jose from "jose"
+import { AppStoreError } from "./Errors"
 import {
   CheckTestNotificationResponse,
   Environment,
+  ExtendRenewalDateRequest,
+  ExtendRenewalDateResponse,
   HistoryResponse,
   NotificationHistoryQuery,
   NotificationHistoryRequest,
@@ -13,11 +16,9 @@ import {
   StatusResponse,
   SubscriptionStatusesQuery,
   TransactionHistoryQuery,
-  TransactionInfoResponse,
-  ExtendRenewalDateResponse,
-  ExtendRenewalDateRequest
+  TransactionHistoryVersion,
+  TransactionInfoResponse
 } from "./Models"
-import { AppStoreError } from "./Errors"
 
 type HTTPMethod = "GET" | "POST" | "PUT"
 
@@ -66,8 +67,12 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
    */
-  async getTransactionHistory(transactionId: string, query: TransactionHistoryQuery = {}): Promise<HistoryResponse> {
-    const path = this.addQuery(`/inApps/v1/history/${transactionId}`, { ...query })
+  async getTransactionHistory(
+    transactionId: string,
+    query: TransactionHistoryQuery = {},
+    version: TransactionHistoryVersion = TransactionHistoryVersion.v1
+  ): Promise<HistoryResponse> {
+    const path = this.addQuery(`/inApps/${version}/history/${transactionId}`, { ...query })
     return this.makeRequest("GET", path)
   }
 

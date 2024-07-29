@@ -43,7 +43,14 @@ export interface TransactionHistoryQuery {
   productId?: string
   subscriptionGroupIdentifier?: string
   inAppOwnershipType?: OwnershipType
+  /** @deprecated */
   revoked?: boolean
+}
+
+export enum TransactionHistoryVersion {
+  /** @deprecated */
+  v1 = "v1",
+  v2 = "v2"
 }
 
 /**
@@ -211,6 +218,10 @@ export interface JWSRenewalInfoDecodedPayload {
   productId: string
   recentSubscriptionStartDate: Timestamp
   renewalDate: Timestamp
+  currency?: string
+  renewalPrice?: number
+  offerDiscountType?: OfferDiscountType
+  eligibleWinBackOfferIds?: string[]
   signedDate: Timestamp
 }
 
@@ -238,7 +249,8 @@ export enum ExpirationIntent {
 export enum OfferType {
   Introductory = 1,
   Promotional = 2,
-  SubscriptionOfferCode = 3
+  SubscriptionOfferCode = 3,
+  WinBackOffer = 4
 }
 
 /**

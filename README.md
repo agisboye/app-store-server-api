@@ -152,7 +152,7 @@ if (isDecodedNotificationDataPayload(payload)) {
   // payload is of type DecodedNotificationDataPayload
 }
 
-if (isdecodedNotificationSummaryPayload(payload)) {
+if (isDecodedNotificationSummaryPayload(payload)) {
   // payload is of type DecodedNotificationSummaryPayload
 }
 ```
