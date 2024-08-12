@@ -349,16 +349,18 @@ export enum NotificationType {
   DidFailToRenew = "DID_FAIL_TO_RENEW",
   DidRenew = "DID_RENEW",
   Expired = "EXPIRED",
+  ExternalPurchaseToken = "EXTERNAL_PURCHASE_TOKEN",
   GracePeriodExpired = "GRACE_PERIOD_EXPIRED",
   OfferRedeemed = "OFFER_REDEEMED",
+  OneTimeCharge = "ONE_TIME_CHARGE",
   PriceIncrease = "PRICE_INCREASE",
   Refund = "REFUND",
   RefundDeclined = "REFUND_DECLINED",
+  RefundReversed = "REFUND_REVERSED",
   RenewalExtended = "RENEWAL_EXTENDED",
+  RenewalExtension = "RENEWAL_EXTENSION",
   Revoke = "REVOKE",
   Subscribed = "SUBSCRIBED",
-  RenewalExtension = "RENEWAL_EXTENSION",
-  RefundReversed = "REFUND_REVERSED",
   Test = "TEST"
 }
 
