@@ -358,7 +358,8 @@ export enum NotificationType {
   Revoke = "REVOKE",
   Subscribed = "SUBSCRIBED",
   RenewalExtension = "RENEWAL_EXTENSION",
-  RefundReversed = "REFUND_REVERSED"
+  RefundReversed = "REFUND_REVERSED",
+  Test = "TEST"
 }
 
 /**
