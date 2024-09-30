@@ -13,15 +13,17 @@ export class AppStoreError extends Error {
 
   errorCode: number
   isRetryable: boolean
+  retryAfter?: number
 
   // https://developer.apple.com/documentation/appstoreserverapi/ratelimitexceedederror
   isRateLimitExceeded: boolean
 
-  constructor(errorCode: number, errorMessage: string) {
+  constructor(errorCode: number, errorMessage: string, { retryAfter}:{ retryAfter?: number } = {}) {
     super(errorMessage)
     this.errorCode = errorCode
     this.isRetryable = AppStoreError.RETRYABLE_ERRORS.includes(errorCode)
     this.isRateLimitExceeded = errorCode === 4290000
+    this.retryAfter = retryAfter
   }
 }
 
