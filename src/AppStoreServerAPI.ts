@@ -161,7 +161,12 @@ export class AppStoreServerAPI {
       case 429:
       case 500:
         const body = await result.json()
-        throw new AppStoreError(body.errorCode, body.errorMessage)
+        let retryAfter: number | undefined
+        let retryAfterHeader = result.headers.get('retry-after')
+        if (result.status === 429 && retryAfterHeader !== null) {
+          retryAfter = parseInt(retryAfterHeader)
+        }
+        throw new AppStoreError(body.errorCode, body.errorMessage, retryAfter)
 
       case 401:
         this.token = undefined
