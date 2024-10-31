@@ -1,6 +1,6 @@
 import * as jose from "jose"
 import fetch from "node-fetch"
-import { v4 as uuidv4 } from "uuid"
+import { randomUUID } from "crypto"
 import { AppStoreError } from "./Errors"
 import {
   CheckTestNotificationResponse,
@@ -191,7 +191,7 @@ export class AppStoreServerAPI {
 
     const payload = {
       bid: this.bundleId,
-      nonce: uuidv4()
+      nonce: randomUUID()
     }
 
     const privateKey = await this.key
