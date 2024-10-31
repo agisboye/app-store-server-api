@@ -11,7 +11,7 @@ A Node.js client for the [App Store Server API](https://developer.apple.com/docu
 - Types and helpers for [App Store Server Notifications V2](https://developer.apple.com/documentation/appstoreservernotifications)
 
 ## Requirements
-Node.js 15.6.0 or newer
+Node.js 18.12.0 or newer
 
 ## Installation
 ```bash
