@@ -42,7 +42,7 @@
     "url": "https://github.com/agisboye/app-store-server-api/issues"
   },
   "dependencies": {
-    "jose": "^4.15.7"
+    "jose": "^5.9.6"
   },
   "devDependencies": {
     "@types/node": "^22.8.6",
