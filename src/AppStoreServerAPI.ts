@@ -1,5 +1,4 @@
 import * as jose from "jose"
-import fetch from "node-fetch"
 import { randomUUID } from "crypto"
 import { AppStoreError } from "./Errors"
 import {
@@ -162,7 +161,7 @@ export class AppStoreServerAPI {
       case 500:
         const body = await result.json()
         let retryAfter: number | undefined
-        let retryAfterHeader = result.headers.get('retry-after')
+        let retryAfterHeader = result.headers.get("retry-after")
         if (result.status === 429 && retryAfterHeader !== null) {
           retryAfter = parseInt(retryAfterHeader)
         }
