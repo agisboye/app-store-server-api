@@ -44,6 +44,7 @@ export {
   NotificationHistoryResponseItem,
   ExtendRenewalDateRequest,
   ExtendRenewalDateResponse,
+  TransactionHistoryVersion,
 } from "./Models"
 
 export { decodeTransactions, decodeTransaction, decodeRenewalInfo, decodeNotificationPayload } from "./Decoding"

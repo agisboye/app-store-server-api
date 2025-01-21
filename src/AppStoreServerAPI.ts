@@ -1,6 +1,5 @@
 import * as jose from "jose"
-import fetch from "node-fetch"
-import { v4 as uuidv4 } from "uuid"
+import { randomUUID } from "crypto"
 import { AppStoreError } from "./Errors"
 import {
   CheckTestNotificationResponse,
@@ -161,7 +160,12 @@ export class AppStoreServerAPI {
       case 429:
       case 500:
         const body = await result.json()
-        throw new AppStoreError(body.errorCode, body.errorMessage)
+        let retryAfter: number | undefined
+        let retryAfterHeader = result.headers.get("retry-after")
+        if (result.status === 429 && retryAfterHeader !== null) {
+          retryAfter = parseInt(retryAfterHeader)
+        }
+        throw new AppStoreError(body.errorCode, body.errorMessage, retryAfter)
 
       case 401:
         this.token = undefined
@@ -186,7 +190,7 @@ export class AppStoreServerAPI {
 
     const payload = {
       bid: this.bundleId,
-      nonce: uuidv4()
+      nonce: randomUUID()
     }
 
     const privateKey = await this.key
