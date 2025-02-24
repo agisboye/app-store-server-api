@@ -565,7 +565,7 @@ export enum LifetimeDollarsRefunded {
 export enum Platform {
   Undeclared = 0,
   Apple = 1,
-  NonApple = 1,
+  NonApple = 2,
 }
 
 /**
