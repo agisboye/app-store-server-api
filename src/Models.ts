@@ -91,6 +91,7 @@ export interface JWSDecodedHeader {
  */
 export interface JWSTransactionDecodedPayload {
   appAccountToken?: string
+  appTransactionId?: string
   bundleId: string
   currency: string
   environment: Environment
@@ -99,6 +100,7 @@ export interface JWSTransactionDecodedPayload {
   isUpgraded?: boolean
   offerDiscountType?: OfferDiscountType
   offerIdentifier?: string
+  offerPeriod?: string;
   offerType?: OfferType
   originalPurchaseDate: Timestamp
   originalTransactionId: string
