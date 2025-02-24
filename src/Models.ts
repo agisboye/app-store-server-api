@@ -205,6 +205,8 @@ export enum SubscriptionStatus {
  * https://developer.apple.com/documentation/appstoreserverapi/jwsrenewalinfodecodedpayload
  */
 export interface JWSRenewalInfoDecodedPayload {
+  appAccountToken?: string
+  appTransactionId?: string
   autoRenewProductId: string
   autoRenewStatus: AutoRenewStatus
   environment: Environment
@@ -212,6 +214,7 @@ export interface JWSRenewalInfoDecodedPayload {
   gracePeriodExpiresDate?: Timestamp
   isInBillingRetryPeriod?: boolean
   offerIdentifier?: string
+  offerPeriod?: string;
   offerType?: OfferType
   originalTransactionId: string
   priceIncreaseStatus?: PriceIncreaseStatus
