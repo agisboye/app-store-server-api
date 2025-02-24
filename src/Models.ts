@@ -489,3 +489,129 @@ export interface ExtendRenewalDateResponse {
   success: boolean
   webOrderLineItemId: string
 }
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/accounttenure
+ */
+export enum AccountTenure {
+  Undeclared = 0,
+  Between0_3Days = 1,
+  Between3_10Days = 2,
+  Between10_30Days = 3,
+  Between30_90Days = 4,
+  Between90_180Days = 5,
+  Between180_365Days = 6,
+  Over365Days = 7,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/consumptionstatus
+ */
+export enum ConsumptionStatus {
+  Undeclared = 0,
+  NotConsumed = 1,
+  PartiallyConsumed = 2,
+  FullyConsumed = 3,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/deliverystatus
+ */
+export enum DeliveryStatus {
+  DeliveredAndWorkingProperly = 0,
+  DidntDeliverDueToQualityIssue = 1,
+  DeliveredWrongItem = 2,
+  DidntDeliverDueToServerOutage = 3,
+  DidntDeliverDueToInGameCurrencyChange = 4,
+  DidntDeliverDueToOtherReason = 5,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/lifetimedollarspurchased
+ */
+export enum LifetimeDollarsPurchased {
+  Undeclared = 0,
+  ZeroUSD = 1,
+  Between_0_01_And_49_99USD = 2,
+  Between_50_And_99_99USD = 3,
+  Between_100_And_499_99USD = 4,
+  Between_500_And_999_99USD = 5,
+  Between_1000_And_1999_99USD = 6,
+  Over_2000USD = 7,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/lifetimedollarsrefunded
+ */
+export enum LifetimeDollarsRefunded {
+  Undeclared = 0,
+  ZeroUSD = 1,
+  Between_0_01_And_49_99USD = 2,
+  Between_50_And_99_99USD = 3,
+  Between_100_And_499_99USD = 4,
+  Between_500_And_999_99USD = 5,
+  Between_1000_And_1999_99USD = 6,
+  Over_2000USD = 7,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/platform
+ */
+export enum Platform {
+  Undeclared = 0,
+  Apple = 1,
+  NonApple = 1,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/playtime
+ */
+export enum PlayTime {
+  Undeclared = 0,
+  Between0_5Minutes = 1,
+  Between5_60Minutes = 2,
+  Between1_6Hours = 3,
+  Between6_24Hours = 4,
+  Between1_4Days = 5,
+  Between4_16Days = 6,
+  Over16Days = 7,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/refundpreference
+ */
+export enum RefundPreference {
+  Undeclared = 0,
+  PreferAppleGrantsRefund = 1,
+  PreferAppleDeclinesRefund = 2,
+  NoPreference = 3,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/userstatus
+ */
+export enum UserStatus {
+  Undeclared = 0,
+  AccountIsActive = 1,
+  AccountIsSuspended = 2,
+  AccountIsTerminated = 3,
+  AccountHasLimitedAccess = 4,
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/consumptionrequest
+ */
+export interface ConsumptionRequest {
+  accountTenure: AccountTenure
+  appAccountToken: string
+  consumptionStatus: ConsumptionStatus
+  customerConsented: boolean
+  deliveryStatus: DeliveryStatus
+  lifetimeDollarsPurchased: LifetimeDollarsPurchased
+  lifetimeDollarsRefunded: LifetimeDollarsRefunded
+  platform: Platform
+  playTime: PlayTime
+  refundPreference?: RefundPreference
+  sampleContentProvided: boolean
+  userStatus: UserStatus
+}

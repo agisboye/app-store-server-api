@@ -3,6 +3,7 @@ import { randomUUID } from "crypto"
 import { AppStoreError } from "./Errors"
 import {
   CheckTestNotificationResponse,
+  ConsumptionRequest,
   Environment,
   ExtendRenewalDateRequest,
   ExtendRenewalDateResponse,
@@ -105,6 +106,16 @@ export class AppStoreServerAPI {
     request: ExtendRenewalDateRequest
   ): Promise<ExtendRenewalDateResponse> {
     return this.makeRequest("PUT", `/inApps/v1/subscriptions/extend/${originalTransactionId}`, request)
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/put-v1-transactions-consumption-_transactionid_
+   */
+  async sendConsumptionInformation(
+    transactionId: string,
+    request: ConsumptionRequest
+  ): Promise<any> {
+    return this.makeRequest("PUT", `/inApps/v1/transactions/consumption/${transactionId}`, request)
   }
 
   /**
