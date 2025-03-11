@@ -160,11 +160,10 @@ export class AppStoreServerAPI {
       }
     })
 
-    if (result.status === 200) {
-      return result.json()
-    }
-
     switch (result.status) {
+      case 200: return result.json();
+      case 202: return;
+
       case 400:
       case 403:
       case 404:
