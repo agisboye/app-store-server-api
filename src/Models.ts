@@ -283,6 +283,17 @@ export enum OrderLookupStatus {
 }
 
 /**
+ * https://developer.apple.com/documentation/appstoreservernotifications/consumptionrequestreason
+ */
+export enum ConsumptionRequestReason {
+  UnintendedPurchase = "UNINTENDED_PURCHASE",
+  FulfillmentIssue = "FULFILLMENT_ISSUE",
+  UnsatisfiedWithPurchase = "UNSATISFIED_WITH_PURCHASE",
+  Legal = "LEGAL",
+  Other = "OTHER"
+}
+
+/**
  * https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
  */
 interface DecodedNotificationBasePayload {
@@ -324,6 +335,7 @@ export interface NotificationData {
   appAppleId: number
   bundleId: string
   bundleVersion: string
+  consumptionRequestReason?: ConsumptionRequestReason
   environment: Environment
   signedRenewalInfo?: JWSRenewalInfo
   signedTransactionInfo: JWSTransaction
