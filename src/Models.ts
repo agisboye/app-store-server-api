@@ -324,6 +324,7 @@ export interface NotificationData {
   appAppleId: number
   bundleId: string
   bundleVersion: string
+  consumptionRequestReason?: string
   environment: Environment
   signedRenewalInfo?: JWSRenewalInfo
   signedTransactionInfo: JWSTransaction
