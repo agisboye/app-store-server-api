@@ -26,6 +26,7 @@ export {
   SubscriptionGroupIdentifierItem,
   OrderLookupResponse,
   OrderLookupStatus,
+  ConsumptionRequestReason,
   DecodedNotificationPayload,
   DecodedNotificationDataPayload,
   DecodedNotificationSummaryPayload,
