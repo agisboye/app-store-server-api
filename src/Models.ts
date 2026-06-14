@@ -100,7 +100,7 @@ export interface JWSTransactionDecodedPayload {
   isUpgraded?: boolean
   offerDiscountType?: OfferDiscountType
   offerIdentifier?: string
-  offerPeriod?: string;
+  offerPeriod?: string
   offerType?: OfferType
   originalPurchaseDate: Timestamp
   originalTransactionId: string
@@ -216,7 +216,7 @@ export interface JWSRenewalInfoDecodedPayload {
   gracePeriodExpiresDate?: Timestamp
   isInBillingRetryPeriod?: boolean
   offerIdentifier?: string
-  offerPeriod?: string;
+  offerPeriod?: string
   offerType?: OfferType
   originalTransactionId: string
   priceIncreaseStatus?: PriceIncreaseStatus
@@ -518,7 +518,7 @@ export enum AccountTenure {
   Between30_90Days = 4,
   Between90_180Days = 5,
   Between180_365Days = 6,
-  Over365Days = 7,
+  Over365Days = 7
 }
 
 /**
@@ -528,7 +528,7 @@ export enum ConsumptionStatus {
   Undeclared = 0,
   NotConsumed = 1,
   PartiallyConsumed = 2,
-  FullyConsumed = 3,
+  FullyConsumed = 3
 }
 
 /**
@@ -540,7 +540,7 @@ export enum DeliveryStatus {
   DeliveredWrongItem = 2,
   DidntDeliverDueToServerOutage = 3,
   DidntDeliverDueToInGameCurrencyChange = 4,
-  DidntDeliverDueToOtherReason = 5,
+  DidntDeliverDueToOtherReason = 5
 }
 
 /**
@@ -554,7 +554,7 @@ export enum LifetimeDollarsPurchased {
   Between_100_And_499_99USD = 4,
   Between_500_And_999_99USD = 5,
   Between_1000_And_1999_99USD = 6,
-  Over_2000USD = 7,
+  Over_2000USD = 7
 }
 
 /**
@@ -568,7 +568,7 @@ export enum LifetimeDollarsRefunded {
   Between_100_And_499_99USD = 4,
   Between_500_And_999_99USD = 5,
   Between_1000_And_1999_99USD = 6,
-  Over_2000USD = 7,
+  Over_2000USD = 7
 }
 
 /**
@@ -577,7 +577,7 @@ export enum LifetimeDollarsRefunded {
 export enum Platform {
   Undeclared = 0,
   Apple = 1,
-  NonApple = 2,
+  NonApple = 2
 }
 
 /**
@@ -591,7 +591,7 @@ export enum PlayTime {
   Between6_24Hours = 4,
   Between1_4Days = 5,
   Between4_16Days = 6,
-  Over16Days = 7,
+  Over16Days = 7
 }
 
 /**
@@ -601,7 +601,7 @@ export enum RefundPreference {
   Undeclared = 0,
   PreferAppleGrantsRefund = 1,
   PreferAppleDeclinesRefund = 2,
-  NoPreference = 3,
+  NoPreference = 3
 }
 
 /**
@@ -612,7 +612,7 @@ export enum UserStatus {
   AccountIsActive = 1,
   AccountIsSuspended = 2,
   AccountIsTerminated = 3,
-  AccountHasLimitedAccess = 4,
+  AccountHasLimitedAccess = 4
 }
 
 /**

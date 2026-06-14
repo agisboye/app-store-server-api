@@ -1,40 +1,22 @@
 import { X509Certificate } from "crypto"
 import * as jose from "jose"
-import { APPLE_ROOT_CA_G3_FINGERPRINT } from "./AppleRootCertificate"
-import { CertificateValidationError } from "./Errors"
-import {
-  DecodedNotificationPayload,
-  JWSRenewalInfo,
-  JWSRenewalInfoDecodedPayload,
-  JWSTransaction,
-  JWSTransactionDecodedPayload
-} from "./Models"
+import { APPLE_ROOT_CA_G3_FINGERPRINT } from "./AppleRootCertificate.js"
+import { CertificateValidationError } from "./Errors.js"
+import { DecodedNotificationPayload, JWSRenewalInfo, JWSRenewalInfoDecodedPayload, JWSTransaction, JWSTransactionDecodedPayload } from "./Models.js"
 
-export async function decodeTransactions(
-  signedTransactions: JWSTransaction[],
-  rootCertFingerprint?: string
-): Promise<JWSTransactionDecodedPayload[]> {
+export async function decodeTransactions(signedTransactions: JWSTransaction[], rootCertFingerprint?: string): Promise<JWSTransactionDecodedPayload[]> {
   return Promise.all(signedTransactions.map(transaction => decodeJWS(transaction, rootCertFingerprint)))
 }
 
-export async function decodeTransaction(
-  transaction: JWSTransaction,
-  rootCertFingerprint?: string
-): Promise<JWSTransactionDecodedPayload> {
+export async function decodeTransaction(transaction: JWSTransaction, rootCertFingerprint?: string): Promise<JWSTransactionDecodedPayload> {
   return decodeJWS(transaction, rootCertFingerprint)
 }
 
-export async function decodeRenewalInfo(
-  info: JWSRenewalInfo,
-  rootCertFingerprint?: string
-): Promise<JWSRenewalInfoDecodedPayload> {
+export async function decodeRenewalInfo(info: JWSRenewalInfo, rootCertFingerprint?: string): Promise<JWSRenewalInfoDecodedPayload> {
   return decodeJWS(info, rootCertFingerprint)
 }
 
-export async function decodeNotificationPayload(
-  payload: string,
-  rootCertFingerprint?: string
-): Promise<DecodedNotificationPayload> {
+export async function decodeNotificationPayload(payload: string, rootCertFingerprint?: string): Promise<DecodedNotificationPayload> {
   return decodeJWS(payload, rootCertFingerprint)
 }
 

@@ -1,6 +1,6 @@
-import * as jose from "jose"
 import { randomUUID } from "crypto"
-import { AppStoreError } from "./Errors"
+import * as jose from "jose"
+import { AppStoreError } from "./Errors.js"
 import {
   CheckTestNotificationResponse,
   ConsumptionRequest,
@@ -18,7 +18,7 @@ import {
   TransactionHistoryQuery,
   TransactionHistoryVersion,
   TransactionInfoResponse
-} from "./Models"
+} from "./Models.js"
 
 type HTTPMethod = "GET" | "POST" | "PUT"
 
@@ -35,7 +35,7 @@ export class AppStoreServerAPI {
   readonly environment: Environment
   private readonly baseUrl: string
 
-  private readonly key: Promise<jose.KeyLike>
+  private readonly key: Promise<jose.CryptoKey>
   private readonly keyId: string
   private readonly issuerId: string
   private readonly bundleId: string
@@ -101,20 +101,14 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/extend_a_subscription_renewal_date
    */
-  async extendSubscriptionRenewalDate(
-    originalTransactionId: string,
-    request: ExtendRenewalDateRequest
-  ): Promise<ExtendRenewalDateResponse> {
+  async extendSubscriptionRenewalDate(originalTransactionId: string, request: ExtendRenewalDateRequest): Promise<ExtendRenewalDateResponse> {
     return this.makeRequest("PUT", `/inApps/v1/subscriptions/extend/${originalTransactionId}`, request)
   }
 
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/put-v1-transactions-consumption-_transactionid_
    */
-  async sendConsumptionInformation(
-    transactionId: string,
-    request: ConsumptionRequest
-  ): Promise<any> {
+  async sendConsumptionInformation(transactionId: string, request: ConsumptionRequest): Promise<any> {
     return this.makeRequest("PUT", `/inApps/v1/transactions/consumption/${transactionId}`, request)
   }
 
@@ -135,10 +129,7 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_notification_history
    */
-  async getNotificationHistory(
-    request: NotificationHistoryRequest,
-    query: NotificationHistoryQuery = {}
-  ): Promise<NotificationHistoryResponse> {
+  async getNotificationHistory(request: NotificationHistoryRequest, query: NotificationHistoryQuery = {}): Promise<NotificationHistoryResponse> {
     const path = this.addQuery("/inApps/v1/notifications/history", { ...query })
     return this.makeRequest("POST", path, request)
   }
@@ -161,21 +152,23 @@ export class AppStoreServerAPI {
     })
 
     switch (result.status) {
-      case 200: return result.json();
-      case 202: return;
+      case 200:
+        return result.json()
+      case 202:
+        return
 
       case 400:
       case 403:
       case 404:
       case 429:
-      case 500:
-        const body = await result.json()
+      case 500: {
         let retryAfter: number | undefined
-        let retryAfterHeader = result.headers.get("retry-after")
+        const retryAfterHeader = result.headers.get("retry-after")
         if (result.status === 429 && retryAfterHeader !== null) {
           retryAfter = parseInt(retryAfterHeader)
         }
-        throw new AppStoreError(body.errorCode, body.errorMessage, retryAfter)
+        throw await this.errorForResponse(result, retryAfter)
+      }
 
       case 401:
         this.token = undefined
@@ -184,6 +177,42 @@ export class AppStoreServerAPI {
       default:
         throw new Error("An unknown error occurred")
     }
+  }
+
+  /**
+   * Builds an error from a non-success API response.
+   *
+   * Apple documents error responses as JSON containing `errorCode` and `errorMessage`, but an
+   * actual infrastructure failure can still return a non-JSON body (e.g. an HTML 5xx page, or an
+   * empty body). The body is therefore parsed defensively: a well-formed error becomes an
+   * `AppStoreError`, while anything else becomes a generic error that surfaces the status code and
+   * the raw body rather than throwing an opaque JSON parse error.
+   */
+  private async errorForResponse(result: Response, retryAfter?: number): Promise<Error> {
+    const text = await result.text()
+
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(text)
+    } catch {
+      parsed = undefined
+    }
+
+    if (
+      typeof parsed === "object" &&
+      parsed !== null &&
+      "errorCode" in parsed &&
+      typeof parsed.errorCode === "number" &&
+      "errorMessage" in parsed &&
+      typeof parsed.errorMessage === "string"
+    ) {
+      return new AppStoreError(parsed.errorCode, parsed.errorMessage, retryAfter)
+    }
+
+    const body = text.trim()
+    const snippet = body.length > 500 ? `${body.slice(0, 500)}…` : body
+    const detail = snippet.length > 0 ? `: ${snippet}` : ""
+    return new Error(`The App Store Server API returned an unexpected response (HTTP ${result.status})${detail}`)
   }
 
   /**

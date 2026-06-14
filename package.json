@@ -2,14 +2,17 @@
   "name": "app-store-server-api",
   "version": "0.17.3",
   "description": "A client for the App Store Server API",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/types/index.d.js",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "npm run build:cjs && npm run build:esm && npm run build:types",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:types": "tsc -p tsconfig.types.json",
+    "build": "tsc",
     "package": "npm run build && npm pack"
   },
   "publishConfig": {
@@ -41,14 +44,16 @@
   "bugs": {
     "url": "https://github.com/agisboye/app-store-server-api/issues"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
-    "jose": "^5.9.6"
+    "jose": "^6.2.3"
   },
   "devDependencies": {
-    "@types/node": "^22.8.6",
-    "prettier": "^2.8.8",
-    "ts-node": "^10.9.2",
-    "typescript": "^4.9.5"
+    "@types/node": "^22.19.0",
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3"
   },
   "prettier": {
     "semi": false,
@@ -56,6 +61,6 @@
     "tabWidth": 2,
     "trailingComma": "none",
     "arrowParens": "avoid",
-    "printWidth": 120
+    "printWidth": 160
   }
 }
