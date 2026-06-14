@@ -148,24 +148,38 @@ if (response.hasMore) {
 The App Store Server API and App Store Server Notifications (version 2) are closely related and use some of the same types and encoding formats. This library includes a function to help you decode notifications (which will also verify their signature).
 
 ```javascript
-import { decodeNotificationPayload, isDecodedNotificationDataPayload, isDecodedNotificationSummaryPayload } from "app-store-server-api"
+import {
+  decodeNotificationPayload,
+  isDecodedNotificationDataPayload,
+  isDecodedNotificationSummaryPayload,
+  isDecodedNotificationExternalPurchaseTokenPayload,
+  isDecodedNotificationAppDataPayload
+} from "app-store-server-api"
 
 // signedPayload is the body sent by Apple
 const payload = await decodeNotificationPayload(signedPayload)
 
-// You might want to check that the bundle ID matches that of your app
-if (payload.data.bundleId === APP_BUNDLE_ID) {
-  // Handle the notification...
-}
-
-// Notifications can contain either a data field or a summary field but never both.
+// A notification carries exactly one of: data, summary, externalPurchaseToken, or appData.
 // Use the provided type guards to determine which is present.
 if (isDecodedNotificationDataPayload(payload)) {
   // payload is of type DecodedNotificationDataPayload
+
+  // You might want to check that the bundle ID matches that of your app
+  if (payload.data.bundleId === APP_BUNDLE_ID) {
+    // Handle the notification...
+  }
 }
 
 if (isDecodedNotificationSummaryPayload(payload)) {
   // payload is of type DecodedNotificationSummaryPayload
+}
+
+if (isDecodedNotificationExternalPurchaseTokenPayload(payload)) {
+  // payload is of type DecodedNotificationExternalPurchaseTokenPayload
+}
+
+if (isDecodedNotificationAppDataPayload(payload)) {
+  // payload is of type DecodedNotificationAppDataPayload
 }
 ```
 
@@ -185,8 +199,8 @@ const transactions = await decodeTransactions(response.signedTransactions, finge
 
 ## Resources
 
-- [App Store Server API changelog](https://developer.apple.com/documentation/appstoreserverapi/app_store_server_api_changelog)
-- [App Store Server Notifications changelog](https://developer.apple.com/documentation/appstoreservernotifications/app_store_server_notifications_changelog/)
+- [App Store Server API changelog](https://developer.apple.com/documentation/appstoreserverapi/app-store-server-api-changelog)
+- [App Store Server Notifications changelog](https://developer.apple.com/documentation/appstoreservernotifications/app-store-server-notifications-changelog)
 - [Apple App Store Server Node.js Library](https://github.com/apple/app-store-server-library-node)
 
 WWDC videos:

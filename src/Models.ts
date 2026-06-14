@@ -47,12 +47,6 @@ export interface TransactionHistoryQuery {
   revoked?: boolean
 }
 
-export enum TransactionHistoryVersion {
-  /** @deprecated */
-  v1 = "v1",
-  v2 = "v2"
-}
-
 /**
  * https://developer.apple.com/documentation/appstoreserverapi/historyresponse
  */
@@ -78,6 +72,19 @@ export interface TransactionInfoResponse {
 export type JWSTransaction = string
 
 /**
+ * A customer's app transaction information, signed by Apple, in JSON Web Signature (JWS) format.
+ * https://developer.apple.com/documentation/appstoreserverapi/jwsapptransaction
+ */
+export type JWSAppTransaction = string
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/apptransactioninforesponse
+ */
+export interface AppTransactionInfoResponse {
+  signedAppTransactionInfo: JWSAppTransaction
+}
+
+/**
  * https://developer.apple.com/documentation/appstoreserverapi/jwsdecodedheader
  */
 export interface JWSDecodedHeader {
@@ -92,7 +99,9 @@ export interface JWSDecodedHeader {
 export interface JWSTransactionDecodedPayload {
   appAccountToken?: string
   appTransactionId?: string
+  billingPlanType?: BillingPlanType
   bundleId: string
+  commitmentInfo?: TransactionCommitmentInfo
   currency: string
   environment: Environment
   expiresDate?: Timestamp
@@ -109,7 +118,9 @@ export interface JWSTransactionDecodedPayload {
   purchaseDate: Timestamp
   quantity: number
   revocationDate?: Timestamp
+  revocationPercentage?: number
   revocationReason?: number
+  revocationType?: RevocationType
   signedDate: Timestamp
   storefront: StorefrontCountryCode
   storefrontId: string
@@ -126,7 +137,50 @@ export interface JWSTransactionDecodedPayload {
 export enum OfferDiscountType {
   FreeTrial = "FREE_TRIAL",
   PayAsYouGo = "PAY_AS_YOU_GO",
-  PayUpFront = "PAY_UP_FRONT"
+  PayUpFront = "PAY_UP_FRONT",
+  OneTime = "ONE_TIME"
+}
+
+/**
+ * The type of subscription offer.
+ * https://developer.apple.com/documentation/appstoreserverapi/billingplantype
+ */
+export enum BillingPlanType {
+  BilledUpfront = "BILLED_UPFRONT",
+  Monthly = "MONTHLY"
+}
+
+/**
+ * The type of refund or revocation that applies to a transaction.
+ * https://developer.apple.com/documentation/appstoreserverapi/revocationtype
+ */
+export enum RevocationType {
+  RefundFull = "REFUND_FULL",
+  RefundProrated = "REFUND_PRORATED",
+  FamilyRevoke = "FAMILY_REVOKE"
+}
+
+/**
+ * Commitment information for a subscription with a fixed-period commitment.
+ * https://developer.apple.com/documentation/appstoreserverapi/transactioncommitmentinfo
+ */
+export interface TransactionCommitmentInfo {
+  billingPeriodNumber?: number
+  commitmentExpiresDate?: Timestamp
+  commitmentPrice?: number
+  totalBillingPeriods?: number
+}
+
+/**
+ * Commitment information for the renewal of a subscription with a fixed-period commitment.
+ * https://developer.apple.com/documentation/appstoreserverapi/renewalcommitmentinfo
+ */
+export interface RenewalCommitmentInfo {
+  commitmentAutoRenewProductId?: string
+  commitmentAutoRenewStatus?: AutoRenewStatus
+  commitmentRenewalBillingPlanType?: BillingPlanType
+  commitmentRenewalDate?: Timestamp
+  commitmentRenewalPrice?: number
 }
 
 /**
@@ -211,6 +265,7 @@ export interface JWSRenewalInfoDecodedPayload {
   appTransactionId?: string
   autoRenewProductId: string
   autoRenewStatus: AutoRenewStatus
+  commitmentInfo?: RenewalCommitmentInfo
   environment: Environment
   expirationIntent?: ExpirationIntent
   gracePeriodExpiresDate?: Timestamp
@@ -222,6 +277,7 @@ export interface JWSRenewalInfoDecodedPayload {
   priceIncreaseStatus?: PriceIncreaseStatus
   productId: string
   recentSubscriptionStartDate: Timestamp
+  renewalBillingPlanType?: BillingPlanType
   renewalDate: Timestamp
   currency?: string
   renewalPrice?: number
@@ -283,6 +339,16 @@ export enum OrderLookupStatus {
 }
 
 /**
+ * A response that contains the customer's transaction history for an app.
+ * https://developer.apple.com/documentation/appstoreserverapi/refundhistoryresponse
+ */
+export interface RefundHistoryResponse {
+  signedTransactions: JWSTransaction[]
+  hasMore: boolean
+  revision: string
+}
+
+/**
  * https://developer.apple.com/documentation/appstoreservernotifications/consumptionrequestreason
  */
 export enum ConsumptionRequestReason {
@@ -307,14 +373,36 @@ interface DecodedNotificationBasePayload {
 export interface DecodedNotificationDataPayload extends DecodedNotificationBasePayload {
   data: NotificationData
   summary?: never
+  externalPurchaseToken?: never
+  appData?: never
 }
 
 export interface DecodedNotificationSummaryPayload extends DecodedNotificationBasePayload {
   data?: never
   summary: NotificationSummary
+  externalPurchaseToken?: never
+  appData?: never
 }
 
-export type DecodedNotificationPayload = DecodedNotificationDataPayload | DecodedNotificationSummaryPayload
+export interface DecodedNotificationExternalPurchaseTokenPayload extends DecodedNotificationBasePayload {
+  data?: never
+  summary?: never
+  externalPurchaseToken: ExternalPurchaseToken
+  appData?: never
+}
+
+export interface DecodedNotificationAppDataPayload extends DecodedNotificationBasePayload {
+  data?: never
+  summary?: never
+  externalPurchaseToken?: never
+  appData: AppData
+}
+
+export type DecodedNotificationPayload =
+  | DecodedNotificationDataPayload
+  | DecodedNotificationSummaryPayload
+  | DecodedNotificationExternalPurchaseTokenPayload
+  | DecodedNotificationAppDataPayload
 
 export function isDecodedNotificationDataPayload(
   decodedNotificationPayload: DecodedNotificationPayload
@@ -326,6 +414,18 @@ export function isDecodedNotificationSummaryPayload(
   decodedNotificationPayload: DecodedNotificationPayload
 ): decodedNotificationPayload is DecodedNotificationSummaryPayload {
   return "summary" in decodedNotificationPayload
+}
+
+export function isDecodedNotificationExternalPurchaseTokenPayload(
+  decodedNotificationPayload: DecodedNotificationPayload
+): decodedNotificationPayload is DecodedNotificationExternalPurchaseTokenPayload {
+  return "externalPurchaseToken" in decodedNotificationPayload
+}
+
+export function isDecodedNotificationAppDataPayload(
+  decodedNotificationPayload: DecodedNotificationPayload
+): decodedNotificationPayload is DecodedNotificationAppDataPayload {
+  return "appData" in decodedNotificationPayload
 }
 
 /**
@@ -357,6 +457,39 @@ export interface NotificationSummary {
 }
 
 /**
+ * The payload data for an external purchase token notification.
+ * https://developer.apple.com/documentation/appstoreservernotifications/externalpurchasetoken
+ */
+export interface ExternalPurchaseToken {
+  externalPurchaseId: string
+  tokenCreationDate: Timestamp
+  appAppleId: number
+  bundleId: string
+  tokenExpirationDate?: Timestamp
+  tokenType?: ExternalPurchaseTokenType
+}
+
+/**
+ * The type of a custom link external purchase token.
+ * https://developer.apple.com/documentation/appstoreservernotifications/externalpurchasetoken
+ */
+export enum ExternalPurchaseTokenType {
+  Services = "SERVICES",
+  Acquisition = "ACQUISITION"
+}
+
+/**
+ * The payload data that contains app metadata and the signed app transaction.
+ * https://developer.apple.com/documentation/appstoreservernotifications/appdata
+ */
+export interface AppData {
+  appAppleId?: number
+  bundleId?: string
+  environment?: Environment
+  signedAppTransactionInfo?: JWSAppTransaction
+}
+
+/**
  * https://developer.apple.com/documentation/appstoreservernotifications/notificationtype
  */
 export enum NotificationType {
@@ -368,14 +501,21 @@ export enum NotificationType {
   Expired = "EXPIRED",
   ExternalPurchaseToken = "EXTERNAL_PURCHASE_TOKEN",
   GracePeriodExpired = "GRACE_PERIOD_EXPIRED",
+  /** Only applies to apps that use the Advanced Commerce API. */
+  MetadataUpdate = "METADATA_UPDATE",
+  /** Only applies to apps that use the Advanced Commerce API. */
+  Migration = "MIGRATION",
   OfferRedeemed = "OFFER_REDEEMED",
   OneTimeCharge = "ONE_TIME_CHARGE",
+  /** Only applies to apps that use the Advanced Commerce API. */
+  PriceChange = "PRICE_CHANGE",
   PriceIncrease = "PRICE_INCREASE",
   Refund = "REFUND",
   RefundDeclined = "REFUND_DECLINED",
   RefundReversed = "REFUND_REVERSED",
   RenewalExtended = "RENEWAL_EXTENDED",
   RenewalExtension = "RENEWAL_EXTENSION",
+  RescindConsent = "RESCIND_CONSENT",
   Revoke = "REVOKE",
   Subscribed = "SUBSCRIBED",
   Test = "TEST"
@@ -400,7 +540,11 @@ export enum NotificationSubtype {
   Pending = "PENDING",
   Accepted = "ACCEPTED",
   Summary = "SUMMARY",
-  Failure = "FAILURE"
+  Failure = "FAILURE",
+  // External purchase token subtypes
+  Unreported = "UNREPORTED",
+  ActiveTokenReminder = "ACTIVE_TOKEN_REMINDER",
+  Created = "CREATED"
 }
 
 /**
@@ -505,6 +649,42 @@ export interface ExtendRenewalDateResponse {
   originalTransactionId: string
   success: boolean
   webOrderLineItemId: string
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/massextendrenewaldaterequest
+ */
+export interface MassExtendRenewalDateRequest {
+  requestIdentifier: string
+  extendByDays: number
+  extendReasonCode: ExtendReasonCode
+  productId: string
+  storefrontCountryCodes?: StorefrontCountryCode[]
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/massextendrenewaldateresponse
+ */
+export interface MassExtendRenewalDateResponse {
+  requestIdentifier?: string
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/massextendrenewaldatestatusresponse
+ */
+export interface MassExtendRenewalDateStatusResponse {
+  requestIdentifier?: string
+  complete?: boolean
+  completeDate?: Timestamp
+  failedCount?: number
+  succeededCount?: number
+}
+
+/**
+ * https://developer.apple.com/documentation/appstoreserverapi/updateappaccounttokenrequest
+ */
+export interface UpdateAppAccountTokenRequest {
+  appAccountToken: string
 }
 
 /**

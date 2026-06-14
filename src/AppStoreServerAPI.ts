@@ -2,22 +2,27 @@ import { randomUUID } from "crypto"
 import * as jose from "jose"
 import { AppStoreError } from "./Errors.js"
 import {
+  AppTransactionInfoResponse,
   CheckTestNotificationResponse,
   ConsumptionRequest,
   Environment,
   ExtendRenewalDateRequest,
   ExtendRenewalDateResponse,
   HistoryResponse,
+  MassExtendRenewalDateRequest,
+  MassExtendRenewalDateResponse,
+  MassExtendRenewalDateStatusResponse,
   NotificationHistoryQuery,
   NotificationHistoryRequest,
   NotificationHistoryResponse,
   OrderLookupResponse,
+  RefundHistoryResponse,
   SendTestNotificationResponse,
   StatusResponse,
   SubscriptionStatusesQuery,
   TransactionHistoryQuery,
-  TransactionHistoryVersion,
-  TransactionInfoResponse
+  TransactionInfoResponse,
+  UpdateAppAccountTokenRequest
 } from "./Models.js"
 
 type HTTPMethod = "GET" | "POST" | "PUT"
@@ -56,9 +61,9 @@ export class AppStoreServerAPI {
     this.environment = environment
 
     if (environment === Environment.Sandbox) {
-      this.baseUrl = "https://api.storekit-sandbox.itunes.apple.com"
+      this.baseUrl = "https://api.storekit-sandbox.apple.com"
     } else {
-      this.baseUrl = "https://api.storekit.itunes.apple.com"
+      this.baseUrl = "https://api.storekit.apple.com"
     }
   }
 
@@ -67,12 +72,8 @@ export class AppStoreServerAPI {
   /**
    * https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
    */
-  async getTransactionHistory(
-    transactionId: string,
-    query: TransactionHistoryQuery = {},
-    version: TransactionHistoryVersion = TransactionHistoryVersion.v1
-  ): Promise<HistoryResponse> {
-    const path = this.addQuery(`/inApps/${version}/history/${transactionId}`, { ...query })
+  async getTransactionHistory(transactionId: string, query: TransactionHistoryQuery = {}): Promise<HistoryResponse> {
+    const path = this.addQuery(`/inApps/v2/history/${transactionId}`, { ...query })
     return this.makeRequest("GET", path)
   }
 
@@ -81,6 +82,22 @@ export class AppStoreServerAPI {
    */
   async getTransactionInfo(transactionId: string): Promise<TransactionInfoResponse> {
     return this.makeRequest("GET", `/inApps/v1/transactions/${transactionId}`)
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/get-app-transaction-info
+   * @param transactionId any originalTransactionId, transactionId, or appTransactionId that belongs to the customer.
+   */
+  async getAppTransactionInfo(transactionId: string): Promise<AppTransactionInfoResponse> {
+    return this.makeRequest("GET", `/inApps/v1/transactions/appTransactions/${transactionId}`)
+  }
+
+  /**
+   * Notifies the App Store that your server finished processing a transaction.
+   * https://developer.apple.com/documentation/appstoreserverapi/finish-transaction
+   */
+  async finishTransaction(transactionId: string): Promise<void> {
+    return this.makeRequest("POST", `/inApps/v1/transactions/${transactionId}/finish`)
   }
 
   /**
@@ -99,6 +116,25 @@ export class AppStoreServerAPI {
   }
 
   /**
+   * Returns a paginated list of the customer's refunded transactions.
+   * https://developer.apple.com/documentation/appstoreserverapi/get-refund-history
+   * @param transactionId any originalTransactionId, transactionId, or appTransactionId that belongs to the customer.
+   * @param revision a token, returned in a previous response, used to fetch the next page of results.
+   */
+  async getRefundHistory(transactionId: string, revision?: string): Promise<RefundHistoryResponse> {
+    const path = this.addQuery(`/inApps/v2/refund/lookup/${transactionId}`, revision ? { revision } : {})
+    return this.makeRequest("GET", path)
+  }
+
+  /**
+   * Sets or updates the app account token for a transaction.
+   * https://developer.apple.com/documentation/appstoreserverapi/set-app-account-token
+   */
+  async setAppAccountToken(originalTransactionId: string, request: UpdateAppAccountTokenRequest): Promise<void> {
+    return this.makeRequest("PUT", `/inApps/v1/transactions/${originalTransactionId}/appAccountToken`, request)
+  }
+
+  /**
    * https://developer.apple.com/documentation/appstoreserverapi/extend_a_subscription_renewal_date
    */
   async extendSubscriptionRenewalDate(originalTransactionId: string, request: ExtendRenewalDateRequest): Promise<ExtendRenewalDateResponse> {
@@ -106,10 +142,28 @@ export class AppStoreServerAPI {
   }
 
   /**
-   * https://developer.apple.com/documentation/appstoreserverapi/put-v1-transactions-consumption-_transactionid_
+   * Extends the renewal date for all of a subscription's eligible active subscribers.
+   * https://developer.apple.com/documentation/appstoreserverapi/extend-subscription-renewal-dates-for-all-active-subscribers
    */
-  async sendConsumptionInformation(transactionId: string, request: ConsumptionRequest): Promise<any> {
-    return this.makeRequest("PUT", `/inApps/v1/transactions/consumption/${transactionId}`, request)
+  async extendRenewalDatesForAllActiveSubscribers(request: MassExtendRenewalDateRequest): Promise<MassExtendRenewalDateResponse> {
+    return this.makeRequest("POST", "/inApps/v1/subscriptions/extend/mass", request)
+  }
+
+  /**
+   * Checks the status of a request to extend the renewal date for all active subscribers.
+   * https://developer.apple.com/documentation/appstoreserverapi/get-status-of-subscription-renewal-date-extensions
+   */
+  async getStatusOfSubscriptionRenewalDateExtensions(productId: string, requestIdentifier: string): Promise<MassExtendRenewalDateStatusResponse> {
+    return this.makeRequest("GET", `/inApps/v1/subscriptions/extend/mass/${productId}/${requestIdentifier}`)
+  }
+
+  /**
+   * Sends consumption information about a consumable In-App Purchase or auto-renewable subscription
+   * to the App Store after receiving a CONSUMPTION_REQUEST notification.
+   * https://developer.apple.com/documentation/appstoreserverapi/send-consumption-information
+   */
+  async sendConsumptionInformation(transactionId: string, request: ConsumptionRequest): Promise<void> {
+    return this.makeRequest("PUT", `/inApps/v2/transactions/consumption/${transactionId}`, request)
   }
 
   /**
@@ -152,8 +206,12 @@ export class AppStoreServerAPI {
     })
 
     switch (result.status) {
-      case 200:
-        return result.json()
+      case 200: {
+        // Action endpoints such as Finish-Transaction and Set-App-Account-Token return 200 with an
+        // empty body, so we can't blindly call result.json() (it would throw on empty input).
+        const text = await result.text()
+        return text.length > 0 ? JSON.parse(text) : undefined
+      }
       case 202:
         return
 
