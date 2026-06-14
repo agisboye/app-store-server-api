@@ -39,7 +39,7 @@
   "homepage": "https://github.com/agisboye/app-store-server-api",
   "repository": {
     "type": "git",
-    "url": "git@github.com:agisboye/app-store-server-api.git"
+    "url": "git+ssh://git@github.com/agisboye/app-store-server-api.git"
   },
   "bugs": {
     "url": "https://github.com/agisboye/app-store-server-api/issues"
